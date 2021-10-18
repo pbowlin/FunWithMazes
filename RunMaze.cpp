@@ -13,5 +13,4 @@ int main(){
     //m.listCells();
     m.drawMaze();
     
-    
 }
