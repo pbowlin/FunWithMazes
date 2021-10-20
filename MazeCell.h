@@ -7,6 +7,7 @@ struct CellCoords {
     int row, col;
 };
 
+
 class MazeCell {
     private:
         CellCoords coords;
@@ -31,3 +32,13 @@ class MazeCell {
         
         
 };
+
+namespace std {
+
+  template <>
+  struct hash<MazeCell>
+  {
+    std::size_t operator()(const MazeCell& cell) const;
+  };
+
+}

@@ -1,6 +1,7 @@
 #include "MazeCell.h"
 
 #include <iostream>
+#include <string>
 
 bool operator==(const MazeCell& lhs , const MazeCell& rhs){
     return lhs.coords.row == rhs.coords.row && lhs.coords.col == rhs.coords.col;
@@ -24,6 +25,10 @@ std::ostream& operator<<(std::ostream& o, const std::vector<MazeCell*>& neighbor
     }
     
     return o;
+}
+
+std::size_t std::hash<MazeCell>::operator()(const MazeCell& cell) const {
+    return std::hash<std::string>()(to_string(cell.getCellCoords().row) + to_string(cell.getCellCoords().col));
 }
 
 MazeCell::MazeCell(int row, int col) : 

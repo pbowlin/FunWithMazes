@@ -7,7 +7,6 @@ Maze::Maze(int rows, int cols) :
     maze_rows(rows),
     maze_cols(cols) 
 {
-        
 }
 
 
@@ -26,25 +25,24 @@ void Maze::initializeCells(int rows, int cols){
  
 }
 
-
-std::vector<MazeCell*> Maze::getNeighbors(MazeCell& mc){
-    CellCoords coords = mc.getCellCoords();
+// Neighbors are defined as cells orthagonal to a given cell... regardless of whether or not there is a wall between them.
+std::vector<MazeCell*> Maze::getNeighbors(int row, int col){
     std::vector<MazeCell*> neighbors;
     
-    if(coords.row > 0 ){
-        neighbors.push_back(&(maze[coords.row - 1][coords.col]));
+    if(row > 0 ){
+        neighbors.push_back(&(maze[row - 1][col]));
     }
     
-    if(coords.row < maze_rows - 1 ){
-        neighbors.push_back(&(maze[coords.row + 1][coords.col]));
+    if(row < maze_rows - 1 ){
+        neighbors.push_back(&(maze[row + 1][col]));
     }
     
-    if(coords.col > 0 ){
-        neighbors.push_back(&(maze[coords.row][coords.col - 1]));
+    if(col > 0 ){
+        neighbors.push_back(&(maze[row][col - 1]));
     }
     
-    if(coords.col < maze_cols - 1 ){
-        neighbors.push_back(&(maze[coords.row][coords.col + 1]));
+    if(col < maze_cols - 1 ){
+        neighbors.push_back(&(maze[row][col + 1]));
     }
     
     return neighbors;
@@ -71,7 +69,7 @@ void Maze::drawMaze(){
     // Iterate over the maze and knock out walls for every room and passage
     for(int i = 0; i < maze_rows; ++i){
         for(int j = 0; j < maze_cols; ++j){
-            maze_display[i*2+1][j*2+1] = "  "; // All rooms are open
+            maze_display[i*2+1][j*2+1] = "··"; // All rooms are open
             
             // Now check if we need to knock out any walls to the neighboring rooms
             // Because we iterate left to right, top to bottom we only 

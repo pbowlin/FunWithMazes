@@ -8,7 +8,7 @@ DFSMaze::DFSMaze(int rows, int cols) :
     Maze(rows, cols)
 {
 
-    initializeCells(rows, cols);
+    Maze::initializeCells(rows, cols);
 }
 
 
@@ -22,7 +22,9 @@ void DFSMaze::generateMaze(){
     
     while(!path.empty()){
         MazeCell* currentCell = path.top();
-        std::vector<MazeCell*> neighbors = getNeighbors(*currentCell);
+        int curr_row = (*currentCell).getCellCoords().row;
+        int curr_col = (*currentCell).getCellCoords().col;
+        std::vector<MazeCell*> neighbors = Maze::getNeighbors(curr_row, curr_col);
 
         //std::cout << "Current cell: " << *currentCell << " -> " << neighbors << std::endl;
         
@@ -60,6 +62,7 @@ bool DFSMaze::cellVisited(const std::vector<MazeCell*>& visited, const MazeCell&
     }
     return false;
 }
+
 
 MazeCell* DFSMaze::selectNextCell(std::vector<MazeCell*>& unvisited){
     std::random_device rd; // obtain a random number from hardware

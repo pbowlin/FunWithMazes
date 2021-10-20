@@ -1,4 +1,9 @@
 #pragma once
+/*
+Abstract class to define a generic maze. All mazes should have a maze grid
+as well as a start and finish. Neighbors are defined as cells orthagonal to 
+a given cell... regardless of whether or not there is a wall between them.
+*/
 
 #include "MazeCell.h"
 
@@ -16,7 +21,7 @@ class Maze {
     
   protected:
     virtual void initializeCells(int rows, int cols);
-    std::vector<MazeCell*> getNeighbors(MazeCell& mc);
+    std::vector<MazeCell*> getNeighbors(int row, int col); 
     virtual void pickStartAndFinish();
     
     int maze_rows, maze_cols;
