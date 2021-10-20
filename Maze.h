@@ -21,7 +21,7 @@ class Maze {
     
   protected:
     virtual void initializeCells(int rows, int cols);
-    std::vector<MazeCell*> getNeighbors(int row, int col); 
+    std::vector<MazeCell> getNeighbors(int row, int col); 
     virtual void pickStartAndFinish();
     
     int maze_rows, maze_cols;

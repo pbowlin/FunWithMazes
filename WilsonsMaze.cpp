@@ -84,7 +84,7 @@ std::list<MazeCell> WilsonsMaze::performRandomWalk(MazeCell start_cell){
     return path;
 }
 
-MazeCell WilsonsMaze::selectNextCell(std::vector<MazeCell> neighbors){
+MazeCell WilsonsMaze::selectNextCell(const std::vector<MazeCell>& neighbors){
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 gen(rd()); // seed the generator
     std::uniform_int_distribution<> distr(0, neighbors.size() - 1); // define the range

@@ -18,5 +18,5 @@ class WilsonsMaze : public Maze {
         // bool cellVisited(const std::vector<MazeCell*>& visited, const MazeCell& cell);
         // MazeCell* selectNextCell(std::vector<MazeCell*>& unvisited);
         std::list<MazeCell> performRandomWalk(MazeCell start_cell);
-        MazeCell selectNextCell(std::vector<MazeCell> neighbors);
+        MazeCell selectNextCell(const std::vector<MazeCell>& neighbors);
 };
