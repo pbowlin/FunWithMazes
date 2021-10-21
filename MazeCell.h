@@ -5,6 +5,8 @@
 
 struct CellCoords {
     int row, col;
+    
+    friend bool operator==(const CellCoords& lhs , const CellCoords& rhs);
 };
 
 

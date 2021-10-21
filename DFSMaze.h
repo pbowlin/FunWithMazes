@@ -11,6 +11,6 @@ class DFSMaze : public Maze {
         void generateMaze();
         
     private: 
-        bool cellVisited(const std::vector<MazeCell>& visited, const MazeCell& cell);
-        MazeCell selectNextCell(std::vector<MazeCell>& unvisited);
+        bool cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell);
+        CellCoords selectNextCell(std::vector<CellCoords>& unvisited);
 };

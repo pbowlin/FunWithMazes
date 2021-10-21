@@ -3,8 +3,13 @@
 #include <iostream>
 #include <string>
 
+
+bool operator==(const CellCoords& lhs , const CellCoords& rhs){
+    return lhs.row == rhs.row && lhs.col == rhs.col;
+}
+
 bool operator==(const MazeCell& lhs , const MazeCell& rhs){
-    return lhs.coords.row == rhs.coords.row && lhs.coords.col == rhs.coords.col;
+    return lhs.coords == rhs.coords;
 }
 
 std::ostream& operator<<(std::ostream& o, const MazeCell& mc ){

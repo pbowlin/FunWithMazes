@@ -26,23 +26,23 @@ void Maze::initializeCells(int rows, int cols){
 }
 
 // Neighbors are defined as cells orthagonal to a given cell... regardless of whether or not there is a wall between them.
-std::vector<MazeCell> Maze::getNeighbors(int row, int col){
-    std::vector<MazeCell> neighbors;
+std::vector<CellCoords> Maze::getNeighbors(int row, int col){
+    std::vector<CellCoords> neighbors;
     
     if(row > 0 ){
-        neighbors.push_back(maze[row - 1][col]);
+        neighbors.push_back({row - 1, col});
     }
     
     if(row < maze_rows - 1 ){
-        neighbors.push_back(maze[row + 1][col]);
+        neighbors.push_back({row + 1, col});
     }
     
     if(col > 0 ){
-        neighbors.push_back(maze[row][col - 1]);
+        neighbors.push_back({row, col - 1});
     }
     
     if(col < maze_cols - 1 ){
-        neighbors.push_back(maze[row][col + 1]);
+        neighbors.push_back({row, col + 1});
     }
     
     return neighbors;
