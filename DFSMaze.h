@@ -10,7 +10,4 @@ class DFSMaze : public Maze {
         DFSMaze(int rows, int cols);
         void generateMaze();
         
-    private: 
-        bool cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell);
-        CellCoords selectNextCell(std::vector<CellCoords>& unvisited);
 };

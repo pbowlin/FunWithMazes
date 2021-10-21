@@ -3,17 +3,32 @@
 #include <iostream>
 #include <string>
 
+///////////////////////////////////////////////
+// CellCoords operator overloads and hashing //
+///////////////////////////////////////////////
 
 bool operator==(const CellCoords& lhs , const CellCoords& rhs){
     return lhs.row == rhs.row && lhs.col == rhs.col;
 }
+
+std::ostream& operator<<(std::ostream& o, const CellCoords& cc ){
+    return o << "(" << cc.row << ", " << cc.col << ")";
+}
+
+std::size_t std::hash<CellCoords>::operator()(const CellCoords& coords) const {
+    return std::hash<std::string>()(to_string(coords.row) + to_string(coords.col));
+}
+
+/////////////////////////////////////////////
+// MazeCell operator overloads and hashing //
+/////////////////////////////////////////////
 
 bool operator==(const MazeCell& lhs , const MazeCell& rhs){
     return lhs.coords == rhs.coords;
 }
 
 std::ostream& operator<<(std::ostream& o, const MazeCell& mc ){
-    return o << "(" << mc.coords.row << ", " << mc.coords.col << ")";
+    return o << mc.coords;
 }
 
 std::ostream& operator<<(std::ostream& o, const std::vector<MazeCell>& neighbors ){
@@ -33,8 +48,13 @@ std::ostream& operator<<(std::ostream& o, const std::vector<MazeCell*>& neighbor
 }
 
 std::size_t std::hash<MazeCell>::operator()(const MazeCell& cell) const {
-    return std::hash<std::string>()(to_string(cell.getCellCoords().row) + to_string(cell.getCellCoords().col));
+    // return std::hash<std::string>()(to_string(cell.getCellCoords().row) + to_string(cell.getCellCoords().col));
+    return std::hash<CellCoords>()(cell.getCellCoords());
 }
+
+/////////////////////////////////////
+// MazeCell method implementations //
+/////////////////////////////////////
 
 MazeCell::MazeCell(int row, int col) : 
     coords(CellCoords{row,col})

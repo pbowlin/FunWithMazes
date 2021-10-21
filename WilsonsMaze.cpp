@@ -33,15 +33,15 @@ void WilsonsMaze::generateMaze(){
     */
     
     // First we initialize a container of cells not yet in the maze.
-    std::unordered_set<MazeCell> cells_not_in_maze;
+    std::unordered_set<CellCoords> cells_not_in_maze;
     for(int i = 0; i < maze_rows; ++i){
         for(int j = 0; j < maze_cols; ++j){
-            cells_not_in_maze.insert(MazeCell(i,j));
+            cells_not_in_maze.insert({i,j});
         }
     }
     
-    for(auto& mc : cells_not_in_maze){
-        std::cout << mc << std::endl;
+    for(auto& cc : cells_not_in_maze){
+        std::cout << cc << std::endl;
     }
     
     // Set the first cell in the container (which is a random cell) 
@@ -64,16 +64,16 @@ void WilsonsMaze::generateMaze(){
     // We perform random walks from the remaining cells until
     // every cell is in the maze
     while(!cells_not_in_maze.empty()){
-        MazeCell current_cell = *cells_not_in_maze.begin();
-        std::list<MazeCell> path = performRandomWalk(current_cell);
+        CellCoords current_coords = *cells_not_in_maze.begin();
+        std::list<CellCoords> path = performRandomWalk(current_coords);
     }
     
 }
 
-std::list<MazeCell> WilsonsMaze::performRandomWalk(MazeCell start_cell){
-    std::list<MazeCell> path;
-    path.push_back(start_cell);
-    MazeCell current_cell = start_cell;
+std::list<CellCoords> WilsonsMaze::performRandomWalk(CellCoords start_coords){
+    std::list<CellCoords> path;
+    path.push_back(start_coords);
+    CellCoords current_coords = start_coords;
     
     // while(true){
     //     std::vector<MazeCell*> neighbors = Maze::getNeighbors(current_cell.getCellCoords().row, current_cell.getCellCoords().col);
@@ -84,11 +84,11 @@ std::list<MazeCell> WilsonsMaze::performRandomWalk(MazeCell start_cell){
     return path;
 }
 
-MazeCell WilsonsMaze::selectNextCell(const std::vector<MazeCell>& neighbors){
-    std::random_device rd; // obtain a random number from hardware
-    std::mt19937 gen(rd()); // seed the generator
-    std::uniform_int_distribution<> distr(0, neighbors.size() - 1); // define the range
-    int index = distr(gen);
-    return neighbors[index];
-}
+// MazeCell WilsonsMaze::selectNextCell(const std::vector<MazeCell>& neighbors){
+//     std::random_device rd; // obtain a random number from hardware
+//     std::mt19937 gen(rd()); // seed the generator
+//     std::uniform_int_distribution<> distr(0, neighbors.size() - 1); // define the range
+//     int index = distr(gen);
+//     return neighbors[index];
+// }
 

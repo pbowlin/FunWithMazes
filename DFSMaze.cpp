@@ -28,7 +28,7 @@ void DFSMaze::generateMaze(){
         std::vector<CellCoords> unvisited;
         
         for(CellCoords cell : neighbors){
-            if(!cellVisited(visited, cell)){
+            if(!Maze::cellVisited(visited, cell)){
                 unvisited.push_back(cell);
             }
         }
@@ -36,7 +36,7 @@ void DFSMaze::generateMaze(){
         if(unvisited.empty()){
             path.pop();
         } else {
-            CellCoords nextCell = selectNextCell(unvisited);
+            CellCoords nextCell = Maze::selectNextCell(unvisited);
  
             // Get the maze cells from the actual maze so we can add passages in the maze
             MazeCell* toMazeCell = &(Maze::maze[nextCell.row][nextCell.col]);
@@ -55,20 +55,4 @@ void DFSMaze::generateMaze(){
     pickStartAndFinish();
 }
 
-bool DFSMaze::cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell){
-    for(CellCoords cc : visited){
-        if (cell == cc) 
-            return true;
-    }
-    return false;
-}
 
-
-CellCoords DFSMaze::selectNextCell(std::vector<CellCoords>& unvisited){
-    std::random_device rd; // obtain a random number from hardware
-    std::mt19937 gen(rd()); // seed the generator
-    std::uniform_int_distribution<> distr(0, unvisited.size() - 1); // define the range
-    int index = distr(gen);
-    //std::cout << "\tIndex selected: " << index << " || " << unvisited << " || " << *unvisited[index] << std::endl;
-    return unvisited[index];
-}

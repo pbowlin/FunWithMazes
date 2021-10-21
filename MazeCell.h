@@ -5,10 +5,10 @@
 
 struct CellCoords {
     int row, col;
-    
-    friend bool operator==(const CellCoords& lhs , const CellCoords& rhs);
 };
 
+bool operator==(const CellCoords& lhs , const CellCoords& rhs);
+std::ostream& operator<<(std::ostream& o, const CellCoords& cc);
 
 class MazeCell {
     private:
@@ -41,6 +41,12 @@ namespace std {
   struct hash<MazeCell>
   {
     std::size_t operator()(const MazeCell& cell) const;
+  };
+  
+  template <>
+  struct hash<CellCoords>
+  {
+    std::size_t operator()(const CellCoords& coords) const;
   };
 
 }

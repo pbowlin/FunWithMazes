@@ -23,6 +23,8 @@ class Maze {
     virtual void initializeCells(int rows, int cols);
     std::vector<CellCoords> getNeighbors(int row, int col); 
     virtual void pickStartAndFinish();
+    bool cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell);
+    CellCoords selectNextCell(std::vector<CellCoords>& unvisited);
     
     int maze_rows, maze_cols;
     CellCoords start;

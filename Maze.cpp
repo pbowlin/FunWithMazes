@@ -107,3 +107,21 @@ void Maze::pickStartAndFinish(){
     start = {start_row, 0};
     finish = {finish_row, maze_cols - 1};
 }
+
+bool Maze::cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell){
+    for(CellCoords cc : visited){
+        if (cell == cc) 
+            return true;
+    }
+    return false;
+}
+
+
+CellCoords Maze::selectNextCell(std::vector<CellCoords>& unvisited){
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distr(0, unvisited.size() - 1); // define the range
+    int index = distr(gen);
+    //std::cout << "\tIndex selected: " << index << " || " << unvisited << " || " << *unvisited[index] << std::endl;
+    return unvisited[index];
+}
