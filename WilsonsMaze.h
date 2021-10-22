@@ -8,6 +8,7 @@ not tend to favor long corridors, or frequent short dead ends.)
 #include "Maze.h"
 
 #include <list>
+#include <unordered_set>
 
 class WilsonsMaze : public Maze {
     public:
@@ -15,8 +16,8 @@ class WilsonsMaze : public Maze {
         void generateMaze();
         
     private: 
-        // bool cellVisited(const std::vector<MazeCell*>& visited, const MazeCell& cell);
-        // MazeCell* selectNextCell(std::vector<MazeCell*>& unvisited);
-        std::list<CellCoords> performRandomWalk(CellCoords start_coords);
-        //MazeCell selectNextCell(const std::vector<MazeCell>& neighbors);
+        std::list<CellCoords> performRandomWalk(CellCoords start_coords, const std::unordered_set<CellCoords>& cells_not_in_maze);
+        std::list<CellCoords>::iterator checkPathForCell(const std::list<CellCoords>& path, const CellCoords& next_coords);
+        void addPathToMaze(const std::list<CellCoords>& path, std::unordered_set<CellCoords>& cells_not_in_maze);
+
 };

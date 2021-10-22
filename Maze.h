@@ -13,18 +13,18 @@ class Maze {
   public:
   
     Maze(int rows, int cols);
+    virtual ~Maze() = default;
   
     virtual void generateMaze() = 0;
-    
-    void listCells();
+    void listCellsWithPassages();
     virtual void drawMaze();
     
   protected:
     virtual void initializeCells(int rows, int cols);
-    std::vector<CellCoords> getNeighbors(int row, int col); 
+    virtual std::vector<CellCoords> getNeighbors(int row, int col); 
     virtual void pickStartAndFinish();
-    bool cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell);
-    CellCoords selectNextCell(std::vector<CellCoords>& unvisited);
+    virtual bool cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell);
+    virtual CellCoords selectNextCell(std::vector<CellCoords>& next_options);
     
     int maze_rows, maze_cols;
     CellCoords start;

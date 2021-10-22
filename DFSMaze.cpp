@@ -52,7 +52,7 @@ void DFSMaze::generateMaze(){
 
     }
     
-    pickStartAndFinish();
+    Maze::pickStartAndFinish();
 }
 
 

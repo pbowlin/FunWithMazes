@@ -48,7 +48,7 @@ std::vector<CellCoords> Maze::getNeighbors(int row, int col){
     return neighbors;
 }
 
-void Maze::listCells() {
+void Maze::listCellsWithPassages() {
     for(int row = 0; row < maze_rows; ++row){
         for (int col = 0; col < maze_cols; ++col){
             std::cout << maze[row][col] << " -> ";
@@ -60,33 +60,38 @@ void Maze::listCells() {
 void Maze::drawMaze(){
     std::vector<std::vector<std::string>> maze_display;
     
+    std::string wall = "██";
+    std::string room = "  ";
+    std::string vert_passage = "  ";
+    std::string horiz_passage = "  ";
+    
     // Initialize maze to be entirely walls
     for(int i = 0; i < maze_rows * 2 + 1; ++i){
-        std::vector<std::string> maze_row_display(maze_cols * 2 + 1, "██");
+        std::vector<std::string> maze_row_display(maze_cols * 2 + 1, wall);
         maze_display.push_back(maze_row_display);
     }
     
     // Iterate over the maze and knock out walls for every room and passage
     for(int i = 0; i < maze_rows; ++i){
         for(int j = 0; j < maze_cols; ++j){
-            maze_display[i*2+1][j*2+1] = "··"; // All rooms are open
+            maze_display[i*2+1][j*2+1] = room; // All rooms are open
             
             // Now check if we need to knock out any walls to the neighboring rooms
             // Because we iterate left to right, top to bottom we only 
             // need to check the cells to the right and below the current cell.
             if(maze[i][j].isConnected(MazeCell(i, j+1))){
-                maze_display[i*2+1][j*2+2] = "  ";
+                maze_display[i*2+1][j*2+2] = horiz_passage;
             }
             
             if(maze[i][j].isConnected(MazeCell(i+1, j))){
-                maze_display[i*2+2][j*2+1] = "  ";
+                maze_display[i*2+2][j*2+1] = vert_passage;
             }
         }
     }
     
     // Knock out the walls to the start and finish cells.
-    maze_display[start.row*2+1][0] = "  ";
-    maze_display[finish.row*2+1][2*maze_cols] = "  ";
+    maze_display[start.row*2+1][0] = horiz_passage;
+    maze_display[finish.row*2+1][2*maze_cols] = horiz_passage;
     
     // Draw the maze to the console
     for(const std::vector<std::string>& row_display : maze_display) {
@@ -117,11 +122,11 @@ bool Maze::cellVisited(const std::vector<CellCoords>& visited, const CellCoords&
 }
 
 
-CellCoords Maze::selectNextCell(std::vector<CellCoords>& unvisited){
+CellCoords Maze::selectNextCell(std::vector<CellCoords>& next_options){
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 gen(rd()); // seed the generator
-    std::uniform_int_distribution<> distr(0, unvisited.size() - 1); // define the range
+    std::uniform_int_distribution<> distr(0, next_options.size() - 1); // define the range
     int index = distr(gen);
     //std::cout << "\tIndex selected: " << index << " || " << unvisited << " || " << *unvisited[index] << std::endl;
-    return unvisited[index];
+    return next_options[index];
 }
