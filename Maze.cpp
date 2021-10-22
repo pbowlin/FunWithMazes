@@ -121,12 +121,10 @@ bool Maze::cellVisited(const std::vector<CellCoords>& visited, const CellCoords&
     return false;
 }
 
-
-CellCoords Maze::selectNextCell(std::vector<CellCoords>& next_options){
+int Maze::randomlySelectNextIndex(int num_options){
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 gen(rd()); // seed the generator
-    std::uniform_int_distribution<> distr(0, next_options.size() - 1); // define the range
-    int index = distr(gen);
+    std::uniform_int_distribution<> distr(0, num_options - 1); // define the range
     //std::cout << "\tIndex selected: " << index << " || " << unvisited << " || " << *unvisited[index] << std::endl;
-    return next_options[index];
+    return distr(gen);
 }

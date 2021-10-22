@@ -55,7 +55,7 @@ std::list<CellCoords> WilsonsMaze::performRandomWalk(CellCoords start_coords, co
         // Now remove the neighbor from which we just came... so we don't immediately backtrack.
         neighbors.erase(std::remove(neighbors.begin(), neighbors.end(), previous_coords), neighbors.end());
         
-        CellCoords next_coords = Maze::selectNextCell(neighbors);
+        CellCoords next_coords = neighbors[Maze::randomlySelectNextIndex(neighbors.size())];
         
         //Check to see if the new cell connects to an already-built portion of the maze
         if(cells_not_in_maze.count(next_coords) == 0){

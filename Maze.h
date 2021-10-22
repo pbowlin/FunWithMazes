@@ -24,7 +24,8 @@ class Maze {
     virtual std::vector<CellCoords> getNeighbors(int row, int col); 
     virtual void pickStartAndFinish();
     virtual bool cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell);
-    virtual CellCoords selectNextCell(std::vector<CellCoords>& next_options);
+    
+    int randomlySelectNextIndex(int num_options);
     
     int maze_rows, maze_cols;
     CellCoords start;

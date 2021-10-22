@@ -36,7 +36,7 @@ void DFSMaze::generateMaze(){
         if(unvisited.empty()){
             path.pop();
         } else {
-            CellCoords nextCell = Maze::selectNextCell(unvisited);
+            CellCoords nextCell = unvisited[Maze::randomlySelectNextIndex(unvisited.size())];
  
             // Get the maze cells from the actual maze so we can add passages in the maze
             MazeCell* toMazeCell = &(Maze::maze[nextCell.row][nextCell.col]);
