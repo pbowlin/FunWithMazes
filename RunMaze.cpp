@@ -30,5 +30,6 @@ int main(){
     pm.generateMaze();
     std::cout << "Generating maze took: " << pmaze_timer << std::endl;
     pm.drawMaze();
+
     
 }

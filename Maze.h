@@ -8,6 +8,7 @@ a given cell... regardless of whether or not there is a wall between them.
 #include "MazeCell.h"
 
 #include <vector>
+#include <string>
 
 class Maze {
   public:
@@ -17,7 +18,17 @@ class Maze {
   
     virtual void generateMaze() = 0;
     void listCellsWithPassages();
+    virtual void generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display);
     virtual void drawMaze();
+    
+    struct DisplayCharacters {
+      inline static std::string wall = "██";
+      inline static std::string room = "  ";
+      inline static std::string vert_passage = "  ";
+      inline static std::string horiz_passage = "  ";
+    };
+    
+    //std::vector<std::vector<std::string>> maze_display;
     
   protected:
     virtual void initializeCells(int rows, int cols);

@@ -57,41 +57,42 @@ void Maze::listCellsWithPassages() {
     }
 }
 
-void Maze::drawMaze(){
-    std::vector<std::vector<std::string>> maze_display;
-    
-    std::string wall = "██";
-    std::string room = "  ";
-    std::string vert_passage = "  ";
-    std::string horiz_passage = "  ";
+void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display){
     
     // Initialize maze to be entirely walls
     for(int i = 0; i < maze_rows * 2 + 1; ++i){
-        std::vector<std::string> maze_row_display(maze_cols * 2 + 1, wall);
+        std::vector<std::string> maze_row_display(maze_cols * 2 + 1, Maze::DisplayCharacters::wall);
         maze_display.push_back(maze_row_display);
     }
     
     // Iterate over the maze and knock out walls for every room and passage
     for(int i = 0; i < maze_rows; ++i){
         for(int j = 0; j < maze_cols; ++j){
-            maze_display[i*2+1][j*2+1] = room; // All rooms are open
+            maze_display[i*2+1][j*2+1] = Maze::DisplayCharacters::room; // All rooms are open
             
             // Now check if we need to knock out any walls to the neighboring rooms
             // Because we iterate left to right, top to bottom we only 
             // need to check the cells to the right and below the current cell.
             if(maze[i][j].isConnected(MazeCell(i, j+1))){
-                maze_display[i*2+1][j*2+2] = horiz_passage;
+                maze_display[i*2+1][j*2+2] = Maze::DisplayCharacters::horiz_passage;
             }
             
             if(maze[i][j].isConnected(MazeCell(i+1, j))){
-                maze_display[i*2+2][j*2+1] = vert_passage;
+                maze_display[i*2+2][j*2+1] = Maze::DisplayCharacters::vert_passage;
             }
         }
     }
     
     // Knock out the walls to the start and finish cells.
-    maze_display[start.row*2+1][0] = horiz_passage;
-    maze_display[finish.row*2+1][2*maze_cols] = horiz_passage;
+    maze_display[start.row*2+1][0] = Maze::DisplayCharacters::horiz_passage;
+    maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::horiz_passage;
+
+}
+
+void Maze::drawMaze(){
+    
+    std::vector<std::vector<std::string>> maze_display;
+    generateMazeDisplay(maze_display);
     
     // Draw the maze to the console
     for(const std::vector<std::string>& row_display : maze_display) {
