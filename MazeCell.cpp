@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string>
 
-///////////////////////////////////////////////
-// CellCoords operator overloads and hashing //
-///////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+// CellCoords operator overloads, hashing, and methods //
+/////////////////////////////////////////////////////////
 
 bool operator==(const CellCoords& lhs , const CellCoords& rhs){
     return lhs.row == rhs.row && lhs.col == rhs.col;
@@ -17,6 +17,11 @@ std::ostream& operator<<(std::ostream& o, const CellCoords& cc ){
 
 std::size_t std::hash<CellCoords>::operator()(const CellCoords& coords) const {
     return std::hash<std::string>()(to_string(coords.row) + to_string(coords.col));
+}
+
+// Returns the manhattan distance from cell_a to cell_b
+int CellCoords::manhattan_distance(const CellCoords& cell_a, const CellCoords& cell_b){
+    return std::abs(cell_a.row - cell_b.row) + std::abs(cell_a.col - cell_b.col);
 }
 
 /////////////////////////////////////////////

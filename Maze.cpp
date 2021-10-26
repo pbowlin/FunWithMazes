@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <random>
+#include <cmath>
 
 Maze::Maze(int rows, int cols) : 
     maze_rows(rows),
@@ -48,13 +49,25 @@ std::vector<CellCoords> Maze::getNeighbors(int row, int col){
     return neighbors;
 }
 
-void Maze::listCellsWithPassages() {
+void Maze::listCellsWithPassages() const {
     for(int row = 0; row < maze_rows; ++row){
         for (int col = 0; col < maze_cols; ++col){
             std::cout << maze[row][col] << " -> ";
             std::cout << (maze[row][col].getPassages()) << std::endl;
         }
     }
+}
+
+const std::vector<std::vector<MazeCell>>& Maze::getMaze() const {
+    return maze;
+}
+
+CellCoords Maze::getStart() const{
+    return start;
+}
+
+CellCoords Maze::getFinish() const{
+    return finish;
 }
 
 void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display){

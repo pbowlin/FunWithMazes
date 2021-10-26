@@ -5,6 +5,8 @@
 
 struct CellCoords {
     int row, col;
+    
+    static int manhattan_distance(const CellCoords& cell_a, const CellCoords& cell_b);
 };
 
 bool operator==(const CellCoords& lhs , const CellCoords& rhs);
