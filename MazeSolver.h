@@ -12,12 +12,14 @@ algorithms with which to solve and display a provided maze.
 
 class MazeSolver {
     public:
-        static std::vector<MazeCell> solveMaze(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
-                    std::function<std::vector<MazeCell>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
+        static std::vector<CellCoords> solveMaze(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
+                    std::function<std::vector<CellCoords>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
                     std::function<int(const CellCoords&, const CellCoords&)>)>solver_func);
         
-        static std::vector<MazeCell> AStarSolver(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
+        static std::vector<CellCoords> AStarSolver(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
         
     private:
         MazeSolver(); // This class cannot be instantiated
+        
+        static std::vector<CellCoords> reconstruct_path(const std::unordered_map<CellCoords, CellCoords>& came_from, const CellCoords& finish);
 };

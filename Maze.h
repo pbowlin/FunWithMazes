@@ -28,7 +28,7 @@ class Maze {
     
     struct DisplayCharacters {
       inline static std::string wall = "██";
-      inline static std::string room = "  ";
+      inline static std::string room = "··";
       inline static std::string vert_passage = "  ";
       inline static std::string horiz_passage = "  ";
     };

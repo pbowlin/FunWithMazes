@@ -26,7 +26,7 @@ int main(){
     // wm.drawMaze();
     
     std::cout << "================================ PRIM'S MAZE ================================" << std::endl;
-    PrimsMaze pm(1, 7); 
+    PrimsMaze pm(20, 50); 
     Timer pmaze_timer("Prims Maze");
     pm.generateMaze();
     std::cout << "Generating maze took: " << pmaze_timer << std::endl;
