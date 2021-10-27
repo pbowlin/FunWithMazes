@@ -6,13 +6,18 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <limits>
+#include <string>
 
-std::vector<CellCoords> MazeSolver::solveMaze(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
+std::vector<CellCoords> MazeSolver::solveMaze(const Maze& maze, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
                     std::function<std::vector<CellCoords>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
                     std::function<int(const CellCoords&, const CellCoords&)>)>solver_func){
                         
     std::cout << "Solving maze" << std::endl;
-    std::vector<CellCoords> solution = solver_func(maze, start, finish, heuristic_func);
+    const CellCoords& start = maze.getStart();
+    const CellCoords& finish = maze.getFinish();
+    std::vector<CellCoords> solution = solver_func(maze.getMaze(), start, finish, heuristic_func);
+    
+    drawSolution(maze, solution);
     
     return solution;
 }
@@ -52,11 +57,11 @@ std::vector<CellCoords> MazeSolver::AStarSolver(const std::vector<std::vector<Ma
         //std::cout << "Current cell: " << current << std::endl;
         if (current == finish){
             //std::cout << "Finish cell reached: " << current << std::endl;
-            std::vector<CellCoords> final_path = reconstruct_path(came_from, finish);
-            std::cout << "Path: " << std::endl;
-            for(auto x : final_path){
-                std::cout << x << std::endl;
-            }
+            solution = reconstruct_path(came_from, finish);
+            // std::cout << "Path: " << std::endl;
+            // for(auto x : solution){
+            //     std::cout << x << std::endl;
+            // }
             break;
         }
         
@@ -94,4 +99,16 @@ std::vector<CellCoords> MazeSolver::reconstruct_path(const std::unordered_map<Ce
     }
     
     return path;
+}
+
+void MazeSolver::drawSolution(const Maze& maze, const std::vector<CellCoords>& solution){
+    std::vector<std::vector<std::string>> maze_display;
+    maze.generateMazeDisplay(maze_display);
+    
+    for(const CellCoords& step : solution){
+        maze_display[step.row*2 + 1][step.col*2 + 1] = Maze::DisplayCharacters::solution_path;
+    }
+    
+    Maze::display_maze(maze_display);
+    
 }

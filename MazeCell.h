@@ -24,7 +24,7 @@ class MazeCell {
         void addPassage(MazeCell& connection);
         CellCoords getCellCoords() const;
         const std::vector<MazeCell>& getPassages() const;
-        bool isConnected(const MazeCell& mc);
+        bool isConnected(const MazeCell& mc) const;
         
         void printCellCoords();
         void printPassages();

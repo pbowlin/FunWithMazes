@@ -70,7 +70,7 @@ CellCoords Maze::getFinish() const{
     return finish;
 }
 
-void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display){
+void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display) const {
     
     // Initialize maze to be entirely walls
     for(int i = 0; i < maze_rows * 2 + 1; ++i){
@@ -106,7 +106,18 @@ void Maze::drawMaze(){
     
     std::vector<std::vector<std::string>> maze_display;
     generateMazeDisplay(maze_display);
+    Maze::display_maze(maze_display);
     
+    // // Draw the maze to the console
+    // for(const std::vector<std::string>& row_display : maze_display) {
+    //     for(const std::string& maze_element : row_display) {
+    //         std::cout << maze_element;
+    //     }
+    //     std::cout << std::endl;
+    // }
+}
+
+void Maze::display_maze(const std::vector<std::vector<std::string>>& maze_display){
     // Draw the maze to the console
     for(const std::vector<std::string>& row_display : maze_display) {
         for(const std::string& maze_element : row_display) {

@@ -17,7 +17,7 @@ class Maze {
     virtual ~Maze() = default;
   
     virtual void generateMaze() = 0;
-    virtual void generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display);
+    virtual void generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display) const;
     virtual void drawMaze();
     
     void listCellsWithPassages() const;
@@ -31,7 +31,10 @@ class Maze {
       inline static std::string room = "··";
       inline static std::string vert_passage = "  ";
       inline static std::string horiz_passage = "  ";
+      inline static std::string solution_path = "@@";
     };
+    
+    static void display_maze(const std::vector<std::vector<std::string>>& maze_display);
     
     
   protected:

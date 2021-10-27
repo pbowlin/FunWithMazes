@@ -75,7 +75,7 @@ const std::vector<MazeCell>& MazeCell::getPassages() const{
     return has_passages_to;
 }
 
-bool MazeCell::isConnected(const MazeCell& mc){
+bool MazeCell::isConnected(const MazeCell& mc) const{
     for(const MazeCell& passage : has_passages_to){
         if (passage == mc)
             return true;
