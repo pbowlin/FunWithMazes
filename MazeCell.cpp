@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <cmath>
 
 /////////////////////////////////////////////////////////
 // CellCoords operator overloads, hashing, and methods //
@@ -22,6 +23,11 @@ std::size_t std::hash<CellCoords>::operator()(const CellCoords& coords) const {
 // Returns the manhattan distance from cell_a to cell_b
 int CellCoords::manhattan_distance(const CellCoords& cell_a, const CellCoords& cell_b){
     return std::abs(cell_a.row - cell_b.row) + std::abs(cell_a.col - cell_b.col);
+}
+
+// Returns the euclidean distance (stright line distance) from cell_a to cell_b
+int CellCoords::euclidean_distance(const CellCoords& cell_a, const CellCoords& cell_b){
+    return std::sqrt(std::pow(cell_a.row - cell_b.row, 2) + std::pow(cell_a.col - cell_b.col, 2));
 }
 
 /////////////////////////////////////////////

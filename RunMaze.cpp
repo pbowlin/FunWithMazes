@@ -13,7 +13,7 @@ int main(){
     // int rows = 25;
     // int cols = 50;
     int rows = 25;
-    int cols = 30;
+    int cols = 35;
 
     {
         std::cout << "================================ DFS MAZE ================================" << std::endl;
@@ -23,7 +23,7 @@ int main(){
         std::cout << "Generating maze took: " << dfsmaze_timer << std::endl;
         //dfsm.drawMaze();
         //m.listCellsWithPassages();
-        MazeSolver::solveMaze(dfsm, &CellCoords::manhattan_distance, &MazeSolver::AStarSolver);
+        MazeSolver::solveMaze(dfsm, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
     }
     
     {
@@ -33,7 +33,7 @@ int main(){
         wm.generateMaze();
         std::cout << "Generating maze took: " << wmaze_timer << std::endl;
         //wm.drawMaze();
-        MazeSolver::solveMaze(wm, &CellCoords::manhattan_distance, &MazeSolver::AStarSolver);
+        MazeSolver::solveMaze(wm, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
     }
     
     {
@@ -43,7 +43,7 @@ int main(){
         pm.generateMaze();
         std::cout << "Generating maze took: " << pmaze_timer << std::endl;
         //pm.drawMaze();
-        MazeSolver::solveMaze(pm, &CellCoords::manhattan_distance, &MazeSolver::AStarSolver);
+        MazeSolver::solveMaze(pm, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
     }
     
 

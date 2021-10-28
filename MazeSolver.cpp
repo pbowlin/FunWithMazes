@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <queue>
-#include <cmath>
 #include <unordered_map>
 #include <unordered_set>
 #include <limits>
@@ -14,7 +13,7 @@ std::vector<CellCoords> MazeSolver::solveMaze(const Maze& maze, std::function<in
                         
     const CellCoords& start = maze.getStart();
     const CellCoords& finish = maze.getFinish();
-    auto[solution, touched] = solver_func(maze.getMaze(), start, finish, heuristic_func);
+    auto[solution, touched] = solver_func(maze.getMaze(), start, finish, heuristic_func); // <--- return is captured with structured bindings. Cool!
     
     visualizeSolution(maze, solution, touched);
     
@@ -42,7 +41,7 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     
     // Quick structure to default an int value to infinity rather than 0
     struct path_cost {
-        int cost = std::numeric_limits<int>::max();
+        double cost = std::numeric_limits<double>::max();
     };
     
     std::unordered_map<CellCoords, CellCoords> came_from; // The key is a cell and the value is the cell that preceeds the key cell on the cheapest path from the start
@@ -55,21 +54,15 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     while(!open_cells.empty()){
         CellCoords current = open_cells.top();
         touched.insert(open_cells.top());
-        //std::cout << "Current cell: " << current << std::endl;
+        
         if (current == finish){
-            //std::cout << "Finish cell reached: " << current << std::endl;
             solution = reconstruct_path(came_from, finish);
-            // std::cout << "Path: " << std::endl;
-            // for(auto x : solution){
-            //     std::cout << x << std::endl;
-            // }
             break;
         }
         
         open_cells.pop();
         expansion_candidates.erase(current);
         for(const MazeCell& passage : maze[current.row][current.col].getPassages()){
-            //std::cout << passage << std::endl;
             int path_to_start_cost = cheapest_path_from_start[current].cost + 1;
             
             if (path_to_start_cost < cheapest_path_from_start[passage.getCellCoords()].cost){
