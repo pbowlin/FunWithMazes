@@ -13,7 +13,6 @@ Maze::Maze(int rows, int cols) :
 
 // Initializes each cell in the maze vector
 void Maze::initializeCells(int rows, int cols){
-    std::cout << "Initializing cells!" << std::endl;
     
     for(int i = 0; i < rows; ++i){
         std::vector<MazeCell> new_row;

@@ -17,7 +17,6 @@ WilsonsMaze::WilsonsMaze(int rows, int cols) :
 
 
 void WilsonsMaze::generateMaze(){
-    std::cout << "Generating DFS Maze!" << std::endl;
     
     // First we initialize a container of cells not yet in the maze.
     std::unordered_set<CellCoords> cells_not_in_maze;

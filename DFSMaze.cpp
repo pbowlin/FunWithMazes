@@ -11,10 +11,7 @@ DFSMaze::DFSMaze(int rows, int cols) :
     Maze::initializeCells(rows, cols);
 }
 
-// TODO: Try changing all the MazeCell containers to be CellCoords containers instead.
-// Maybe that will have much faster copying?
 void DFSMaze::generateMaze(){
-    std::cout << "Generating DFS Maze!" << std::endl;
     std::vector<CellCoords> visited;
     std::stack<CellCoords> path;
     

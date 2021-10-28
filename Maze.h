@@ -27,11 +27,12 @@ class Maze {
     
     
     struct DisplayCharacters {
-      inline static std::string wall = "██";
-      inline static std::string room = "··";
-      inline static std::string vert_passage = "  ";
-      inline static std::string horiz_passage = "  ";
-      inline static std::string solution_path = "@@";
+      inline static std::string wall = "███";
+      inline static std::string room = "   "; // "··"
+      inline static std::string vert_passage = "   ";
+      inline static std::string horiz_passage = "   ";
+      inline static std::string solution_path = " ♣ ";
+      inline static std::string solution_touched = " * ";
     };
     
     static void display_maze(const std::vector<std::vector<std::string>>& maze_display);

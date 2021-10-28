@@ -14,7 +14,6 @@ PrimsMaze::PrimsMaze(int rows, int cols) :
 }
 
 void PrimsMaze::generateMaze(){
-    std::cout << "Generating Prim's maze!" << std::endl; 
     
     // For now just start at the first cell in the maze
     CellCoords initial_cell {0,0};

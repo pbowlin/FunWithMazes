@@ -9,23 +9,23 @@
 #include <string>
 
 std::vector<CellCoords> MazeSolver::solveMaze(const Maze& maze, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
-                    std::function<std::vector<CellCoords>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
+                    std::function<std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
                     std::function<int(const CellCoords&, const CellCoords&)>)>solver_func){
                         
-    std::cout << "Solving maze" << std::endl;
     const CellCoords& start = maze.getStart();
     const CellCoords& finish = maze.getFinish();
-    std::vector<CellCoords> solution = solver_func(maze.getMaze(), start, finish, heuristic_func);
+    auto[solution, touched] = solver_func(maze.getMaze(), start, finish, heuristic_func);
     
-    drawSolution(maze, solution);
+    visualizeSolution(maze, solution, touched);
     
     return solution;
 }
 
         
-std::vector<CellCoords> MazeSolver::AStarSolver(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
+std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
     std::cout << "Solving maze with A* algorithm" << std::endl;
     std::vector<CellCoords> solution;
+    std::unordered_set<CellCoords> touched;
     
     // Compares two cells by manhattan distance to the goal as a heuristic for the priority queue.
     auto lambda_compare = [finish, &heuristic_func](const CellCoords& lhs, const CellCoords& rhs){
@@ -54,6 +54,7 @@ std::vector<CellCoords> MazeSolver::AStarSolver(const std::vector<std::vector<Ma
     
     while(!open_cells.empty()){
         CellCoords current = open_cells.top();
+        touched.insert(open_cells.top());
         //std::cout << "Current cell: " << current << std::endl;
         if (current == finish){
             //std::cout << "Finish cell reached: " << current << std::endl;
@@ -87,7 +88,7 @@ std::vector<CellCoords> MazeSolver::AStarSolver(const std::vector<std::vector<Ma
         
     }
     
-    return solution;
+    return {solution, touched };
 }
 
 std::vector<CellCoords> MazeSolver::reconstruct_path(const std::unordered_map<CellCoords, CellCoords>& came_from, const CellCoords& finish){
@@ -101,9 +102,13 @@ std::vector<CellCoords> MazeSolver::reconstruct_path(const std::unordered_map<Ce
     return path;
 }
 
-void MazeSolver::drawSolution(const Maze& maze, const std::vector<CellCoords>& solution){
+void MazeSolver::visualizeSolution(const Maze& maze, const std::vector<CellCoords>& solution, const std::unordered_set<CellCoords>& touched){
     std::vector<std::vector<std::string>> maze_display;
     maze.generateMazeDisplay(maze_display);
+    
+    for(const CellCoords& touch : touched){
+        maze_display[touch.row*2 + 1][touch.col*2 + 1] = Maze::DisplayCharacters::solution_touched;
+    }
     
     for(const CellCoords& step : solution){
         maze_display[step.row*2 + 1][step.col*2 + 1] = Maze::DisplayCharacters::solution_path;

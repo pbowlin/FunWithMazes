@@ -10,15 +10,17 @@ algorithms with which to solve and display a provided maze.
 
 #include <vector>
 #include <functional>
+#include <tuple>
+#include <unordered_set>
 
 class MazeSolver {
     public:
         static std::vector<CellCoords> solveMaze(const Maze& maze, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
-                    std::function<std::vector<CellCoords>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
+                    std::function<std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
                     std::function<int(const CellCoords&, const CellCoords&)>)>solver_func);
         
-        static std::vector<CellCoords> AStarSolver(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
-        static void drawSolution(const Maze& maze, const std::vector<CellCoords>& solution);
+        static std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> AStarSolver(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
+        static void visualizeSolution(const Maze& maze, const std::vector<CellCoords>& solution, const std::unordered_set<CellCoords>& touched);
         
         
     private:
