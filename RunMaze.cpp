@@ -5,6 +5,7 @@
 #include "PrimsMaze.h"
 #include "Timer.h"
 #include "MazeSolver.h"
+#include "MazeFactory.h"
 
 #include <iostream>
 
@@ -46,6 +47,6 @@ int main(){
         MazeSolver::solveMaze(pm, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
     }
     
-
+    MazeFactory::createMaze();
     
 }

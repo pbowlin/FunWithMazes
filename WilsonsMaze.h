@@ -17,7 +17,6 @@ class WilsonsMaze : public Maze {
         
     private: 
         std::list<CellCoords> performRandomWalk(CellCoords start_coords, const std::unordered_set<CellCoords>& cells_not_in_maze);
-        std::list<CellCoords>::iterator checkPathForCell(const std::list<CellCoords>& path, const CellCoords& next_coords);
         void addPathToMaze(const std::list<CellCoords>& path, std::unordered_set<CellCoords>& cells_not_in_maze);
 
 };
