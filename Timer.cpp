@@ -12,10 +12,11 @@ Timer::Timer() :
 {
 }
 
-Timer::Timer(std::string c_block_name) :
+Timer::Timer(std::string c_block_name, bool print_on_death) :
     start_time(std::chrono::system_clock::now()),
     step_time(start_time),
-    block_name(c_block_name)
+    block_name(c_block_name),
+    death_rattle(print_on_death)
 {
 }
 
@@ -31,5 +32,6 @@ float Timer::getStepDuration() {
 }
 
 Timer::~Timer(){
-    std::cout << block_name << " execution time: " << *this << std::endl;
+    if(death_rattle)
+        std::cout << block_name << " execution time: " << *this << std::endl;
 }

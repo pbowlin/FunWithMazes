@@ -18,8 +18,6 @@ WilsonsMaze::WilsonsMaze(int rows, int cols) :
 
 void WilsonsMaze::generateMaze(){
     
-    std::cout << "Generating Wilson's Maze" << std::endl;
-    
     // First we initialize a container of cells not yet in the maze.
     std::unordered_set<CellCoords> cells_not_in_maze;
     for(int i = 0; i < maze_rows; ++i){
@@ -32,12 +30,13 @@ void WilsonsMaze::generateMaze(){
     // to be the initial cell within the maze
     cells_not_in_maze.erase(cells_not_in_maze.begin());
     
-    
     // We perform random walks from the remaining cells until
     // every cell is in the maze
     while(!cells_not_in_maze.empty()){
         CellCoords current_coords = *cells_not_in_maze.begin();
+
         std::list<CellCoords> path = performRandomWalk(current_coords, cells_not_in_maze);
+
         addPathToMaze(path, cells_not_in_maze);
     }
     
@@ -53,11 +52,12 @@ std::list<CellCoords> WilsonsMaze::performRandomWalk(CellCoords start_coords, co
     while(true){
         std::vector<CellCoords> neighbors = Maze::getNeighbors(current_coords.row, current_coords.col);
         
-        // Now remove the neighbor from which we just came... so we don't immediately backtrack.
-        neighbors.erase(std::remove(neighbors.begin(), neighbors.end(), previous_coords), neighbors.end());
-        
+        // Now remove the neighbor from which we just came... so we don't immediately backtrack. But only if we still have somewhere to go.
+        if(neighbors.size() > 1)
+            neighbors.erase(std::remove(neighbors.begin(), neighbors.end(), previous_coords), neighbors.end());
+
         CellCoords next_coords = neighbors[Maze::randomlySelectNextIndex(neighbors.size())];
-        
+
         //Check to see if the new cell connects to an already-built portion of the maze
         if(cells_not_in_maze.count(next_coords) == 0){
             // We have connected to the existing maze so add the last cell and return the path

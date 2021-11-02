@@ -11,7 +11,7 @@ takes to execute
 class Timer {
     public:
         Timer();
-        Timer(std::string c_block_name);
+        Timer(std::string c_block_name, bool print_on_death = true);
         
         float getTotalDuration() const;
         float getStepDuration();
@@ -24,5 +24,6 @@ class Timer {
         std::chrono::time_point<std::chrono::system_clock> start_time;
         std::chrono::time_point<std::chrono::system_clock> step_time;
         std::string block_name;
+        bool death_rattle = true;
         
 };

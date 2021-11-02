@@ -12,7 +12,6 @@ DFSMaze::DFSMaze(int rows, int cols) :
 }
 
 void DFSMaze::generateMaze(){
-    std::cout << "Generating DFS Maze" << std::endl;
     std::vector<CellCoords> visited;
     std::stack<CellCoords> path;
     

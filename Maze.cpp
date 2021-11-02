@@ -100,13 +100,15 @@ void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_displ
     }
     
     // Notate the start and finish cells
-    if(start.col == 0 && finish.col == maze_cols-1){
-        maze_display[start.row*2+1][0] = Maze::DisplayCharacters::start_room;
-        maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::finish_room;
-    } else {
-        maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
-        maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
-    }
+    maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
+    maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
+    // if(start.col == 0 && finish.col == maze_cols-1){
+    //     maze_display[start.row*2+1][0] = Maze::DisplayCharacters::start_room;
+    //     maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::finish_room;
+    // } else {
+    //     maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
+    //     maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
+    // }
 
 }
 
@@ -116,13 +118,6 @@ void Maze::drawMaze(){
     generateMazeDisplay(maze_display);
     Maze::display_maze(maze_display);
     
-    // // Draw the maze to the console
-    // for(const std::vector<std::string>& row_display : maze_display) {
-    //     for(const std::string& maze_element : row_display) {
-    //         std::cout << maze_element;
-    //     }
-    //     std::cout << std::endl;
-    // }
 }
 
 void Maze::display_maze(const std::vector<std::vector<std::string>>& maze_display){

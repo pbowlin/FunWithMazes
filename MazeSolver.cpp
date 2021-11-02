@@ -111,13 +111,15 @@ void MazeSolver::visualizeSolution(const Maze& maze, const std::vector<CellCoord
     CellCoords start = maze.getStart();
     CellCoords finish = maze.getFinish();
     auto[maze_rows, maze_cols] = maze.getSize();
-    if(start.col == 0 && finish.col == maze_cols-1){
-        maze_display[start.row*2+1][0] = Maze::DisplayCharacters::start_room;
-        maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::finish_room;
-    } else {
-        maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
-        maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
-    }
+    maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
+    maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
+    // if(start.col == 0 && finish.col == maze_cols-1){
+    //     maze_display[start.row*2+1][0] = Maze::DisplayCharacters::start_room;
+    //     maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::finish_room;
+    // } else {
+    //     maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
+    //     maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
+    // }
     
     Maze::display_maze(maze_display);
     
