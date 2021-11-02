@@ -9,6 +9,7 @@ a given cell... regardless of whether or not there is a wall between them.
 
 #include <vector>
 #include <string>
+#include <tuple>
 
 class Maze {
   public:
@@ -24,15 +25,19 @@ class Maze {
     const std::vector<std::vector<MazeCell>>& getMaze() const;
     CellCoords getStart() const;
     CellCoords getFinish() const;
+    std::tuple<int, int> getSize() const;
     
     
     struct DisplayCharacters {
+      // Note that the characters are formatted to colorize them in the linux terminal i.e \033[;32mThis text is green\033[0m
       inline static std::string wall = "███";
       inline static std::string room = "   "; // "··"
       inline static std::string vert_passage = "   ";
       inline static std::string horiz_passage = "   ";
-      inline static std::string solution_path = " ♣ ";
-      inline static std::string solution_touched = " * ";
+      inline static std::string solution_path = " \033[;32m*\033[0m ";
+      inline static std::string solution_touched = " \033[;36m*\033[0m ";
+      inline static std::string start_room = " \033[1;31mS\033[0m ";
+      inline static std::string finish_room = " \033[1;31mF\033[0m ";
     };
     
     static void display_maze(const std::vector<std::vector<std::string>>& maze_display);

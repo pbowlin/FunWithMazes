@@ -18,7 +18,7 @@ struct Wall {
 class PrimsMaze : public Maze {
     public:
         PrimsMaze(int rows, int cols);
-        void generateMaze();
+        void generateMaze() override;
         
     private: 
     

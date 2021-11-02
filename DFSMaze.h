@@ -9,6 +9,9 @@ This maze algorithm favors long winding corridors with fewer dead ends.
 class DFSMaze : public Maze {
     public:
         DFSMaze(int rows, int cols);
-        void generateMaze();
+        void generateMaze() override;
+        
+    private:
+        void pickStartAndFinish() override;
         
 };

@@ -69,6 +69,10 @@ CellCoords Maze::getFinish() const{
     return finish;
 }
 
+std::tuple<int, int> Maze::getSize() const {
+    return {maze_rows, maze_cols};
+}
+
 void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display) const {
     
     // Initialize maze to be entirely walls
@@ -95,9 +99,14 @@ void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_displ
         }
     }
     
-    // Knock out the walls to the start and finish cells.
-    maze_display[start.row*2+1][0] = Maze::DisplayCharacters::horiz_passage;
-    maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::horiz_passage;
+    // Notate the start and finish cells
+    if(start.col == 0 && finish.col == maze_cols-1){
+        maze_display[start.row*2+1][0] = Maze::DisplayCharacters::start_room;
+        maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::finish_room;
+    } else {
+        maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
+        maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
+    }
 
 }
 

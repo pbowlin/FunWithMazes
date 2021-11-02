@@ -13,7 +13,7 @@ not tend to favor long corridors, or frequent short dead ends.)
 class WilsonsMaze : public Maze {
     public:
         WilsonsMaze(int rows, int cols);
-        void generateMaze();
+        void generateMaze() override;
         
     private: 
         std::list<CellCoords> performRandomWalk(CellCoords start_coords, const std::unordered_set<CellCoords>& cells_not_in_maze);
