@@ -14,11 +14,7 @@ void benchmarkMaze(std::string maze_type, int rows, int cols, int bench_trials){
     std::cout << "Benchmarking maze generation time..." << std::endl;
     Timer benchmark_timer("Benchmarking procedure");
     for(int i = 1; i <= bench_trials; i++){
-        
-        if(i % 50 == 0 || i == bench_trials) {
-            std::cout << "\t" << i << "/" << bench_trials << " trials complete." << std::endl;
-        }
-        
+
         std::unique_ptr<Maze> maze = MazeFactory::createMazeByType(maze_type, rows, cols);
         Timer trial_timer("Benchmark trial", false);
         (*maze).generateMaze();
@@ -28,6 +24,10 @@ void benchmarkMaze(std::string maze_type, int rows, int cols, int bench_trials){
             fastest_trial = trial_time;
         else if (trial_time > slowest_trial)
             slowest_trial = trial_time;
+            
+        if(i % 50 == 0 || i == bench_trials) {
+            std::cout << "\t" << i << "/" << bench_trials << " trials complete." << std::endl;
+        }
         
     }
     
@@ -44,9 +44,11 @@ int main(){
         (*maze).generateMaze();
         std::cout << "Generating maze took: " << maze_timer << std::endl;
         MazeSolver::solveMaze(*maze, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
+        
+        //(*maze).saveMaze();
     }
     
     
-    //benchmarkMaze("Prims", 25, 30, 20);
+    //benchmarkMaze("Wilsons", 100, 100, 1);
     
 }

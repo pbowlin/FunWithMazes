@@ -3,6 +3,7 @@
 #include <iostream>
 #include <random>
 #include <cmath>
+#include <fstream>
 
 Maze::Maze(int rows, int cols) : 
     maze_rows(rows),
@@ -128,6 +129,26 @@ void Maze::display_maze(const std::vector<std::vector<std::string>>& maze_displa
         }
         std::cout << std::endl;
     }
+}
+
+// Saves the current maze to a text file. Currently does not work because of linux color formatting in display string.
+void Maze::saveMaze(){
+    
+    std::vector<std::vector<std::string>> maze_display;
+    generateMazeDisplay(maze_display);
+    
+    std::ofstream maze_file;
+    maze_file.open("MazeFile.txt");
+    
+    for(const std::vector<std::string>& row_display : maze_display) {
+        for(const std::string& maze_element : row_display) {
+            maze_file << maze_element;
+        }
+        maze_file << std::endl;
+    }
+    
+    maze_file.close();
+    
 }
 
 void Maze::pickStartAndFinish(){
