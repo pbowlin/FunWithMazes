@@ -19,8 +19,6 @@ class Maze {
   
     virtual void generateMaze() = 0;
     virtual void generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display) const;
-    virtual void drawMaze();
-    virtual void saveMaze();
     
     void listCellsWithPassages() const;
     const std::vector<std::vector<MazeCell>>& getMaze() const;
@@ -41,7 +39,7 @@ class Maze {
       inline static std::string finish_room = " \033[1;31mF\033[0m ";
     };
     
-    static void display_maze(const std::vector<std::vector<std::string>>& maze_display);
+    //static void display_maze(const std::vector<std::vector<std::string>>& maze_display);
     
     
   protected:

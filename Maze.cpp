@@ -3,7 +3,7 @@
 #include <iostream>
 #include <random>
 #include <cmath>
-#include <fstream>
+//#include <fstream>
 
 Maze::Maze(int rows, int cols) : 
     maze_rows(rows),
@@ -113,43 +113,23 @@ void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_displ
 
 }
 
-void Maze::drawMaze(){
+// void Maze::drawMaze(){
     
-    std::vector<std::vector<std::string>> maze_display;
-    generateMazeDisplay(maze_display);
-    Maze::display_maze(maze_display);
+//     std::vector<std::vector<std::string>> maze_display;
+//     generateMazeDisplay(maze_display);
+//     Maze::display_maze(maze_display);
     
-}
+// }
 
-void Maze::display_maze(const std::vector<std::vector<std::string>>& maze_display){
-    // Draw the maze to the console
-    for(const std::vector<std::string>& row_display : maze_display) {
-        for(const std::string& maze_element : row_display) {
-            std::cout << maze_element;
-        }
-        std::cout << std::endl;
-    }
-}
-
-// Saves the current maze to a text file. Currently does not work because of linux color formatting in display string.
-void Maze::saveMaze(){
-    
-    std::vector<std::vector<std::string>> maze_display;
-    generateMazeDisplay(maze_display);
-    
-    std::ofstream maze_file;
-    maze_file.open("MazeFile.txt");
-    
-    for(const std::vector<std::string>& row_display : maze_display) {
-        for(const std::string& maze_element : row_display) {
-            maze_file << maze_element;
-        }
-        maze_file << std::endl;
-    }
-    
-    maze_file.close();
-    
-}
+// void Maze::display_maze(const std::vector<std::vector<std::string>>& maze_display){
+//     // Draw the maze to the console
+//     for(const std::vector<std::string>& row_display : maze_display) {
+//         for(const std::string& maze_element : row_display) {
+//             std::cout << maze_element;
+//         }
+//         std::cout << std::endl;
+//     }
+// }
 
 void Maze::pickStartAndFinish(){
     std::random_device rd; // obtain a random number from hardware

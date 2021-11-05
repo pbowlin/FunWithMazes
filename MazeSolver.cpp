@@ -7,7 +7,7 @@
 #include <limits>
 #include <string>
 
-std::vector<CellCoords> MazeSolver::solveMaze(const Maze& maze, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
+std::tuple<std::vector<CellCoords>, std::vector<std::vector<std::string>>> MazeSolver::solveMaze(const Maze& maze, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
                     std::function<std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
                     std::function<int(const CellCoords&, const CellCoords&)>)>solver_func){
                         
@@ -15,9 +15,9 @@ std::vector<CellCoords> MazeSolver::solveMaze(const Maze& maze, std::function<in
     const CellCoords& finish = maze.getFinish();
     auto[solution, touched] = solver_func(maze.getMaze(), start, finish, heuristic_func); // <--- return is captured with structured bindings. Cool!
     
-    visualizeSolution(maze, solution, touched);
+    std::vector<std::vector<std::string>> solution_display = generateSolutionDisplay(maze, solution, touched);
     
-    return solution;
+    return {solution, solution_display};
 }
 
         
@@ -95,7 +95,7 @@ std::vector<CellCoords> MazeSolver::reconstruct_path(const std::unordered_map<Ce
     return path;
 }
 
-void MazeSolver::visualizeSolution(const Maze& maze, const std::vector<CellCoords>& solution, const std::unordered_set<CellCoords>& touched){
+std::vector<std::vector<std::string>> MazeSolver::generateSolutionDisplay(const Maze& maze, const std::vector<CellCoords>& solution, const std::unordered_set<CellCoords>& touched){
     std::vector<std::vector<std::string>> maze_display;
     maze.generateMazeDisplay(maze_display);
     
@@ -107,20 +107,13 @@ void MazeSolver::visualizeSolution(const Maze& maze, const std::vector<CellCoord
         maze_display[step.row*2 + 1][step.col*2 + 1] = Maze::DisplayCharacters::solution_path;
     }
     
-    // Notate the start and finish cells
+    // Notate the start and finish cells because they were over-ridden by the solution path
     CellCoords start = maze.getStart();
     CellCoords finish = maze.getFinish();
-    auto[maze_rows, maze_cols] = maze.getSize();
+
     maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
     maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
-    // if(start.col == 0 && finish.col == maze_cols-1){
-    //     maze_display[start.row*2+1][0] = Maze::DisplayCharacters::start_room;
-    //     maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::finish_room;
-    // } else {
-    //     maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
-    //     maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
-    // }
     
-    Maze::display_maze(maze_display);
-    
+    return maze_display;
+
 }

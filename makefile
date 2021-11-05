@@ -1,5 +1,5 @@
-FunWithMazes.exe: RunMaze.o MazeCell.o Maze.o DFSMaze.o WilsonsMaze.o PrimsMaze.o MazeSolver.o Timer.o MazeFactory.o
-	g++ -std=c++17 -o FunWithMazes.exe RunMaze.o MazeCell.o Maze.o DFSMaze.o WilsonsMaze.o PrimsMaze.o MazeSolver.o Timer.o MazeFactory.o
+FunWithMazes.exe: RunMaze.o MazeCell.o Maze.o DFSMaze.o WilsonsMaze.o PrimsMaze.o MazeSolver.o Timer.o MazeFactory.o MazeUtils.o
+	g++ -std=c++17 -o FunWithMazes.exe RunMaze.o MazeCell.o Maze.o DFSMaze.o WilsonsMaze.o PrimsMaze.o MazeSolver.o Timer.o MazeFactory.o MazeUtils.o
     
 RunMaze.o: RunMaze.cpp
 	g++ -std=c++17 -c RunMaze.cpp
@@ -27,6 +27,9 @@ Timer.o: Timer.cpp Timer.h
 	
 MazeFactory.o: MazeFactory.cpp MazeFactory.h
 	g++ -std=c++17 -c MazeFactory.cpp
+	
+MazeUtils.o: MazeUtils.cpp MazeUtils.h
+	g++ -std=c++17 -c MazeUtils.cpp
 
 clean:
 	rm *.o FunWithMazes.exe

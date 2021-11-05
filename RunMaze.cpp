@@ -2,39 +2,40 @@
 #include "Timer.h"
 #include "MazeSolver.h"
 #include "MazeFactory.h"
+#include "MazeUtils.h"
 
 #include <iostream>
 #include <memory>
 #include <string>
 
-void benchmarkMaze(std::string maze_type, int rows, int cols, int bench_trials){
-    float total_time = 0.f;
-    float fastest_trial = 999999.f;
-    float slowest_trial = 0.f;
-    std::cout << "Benchmarking maze generation time..." << std::endl;
-    Timer benchmark_timer("Benchmarking procedure");
-    for(int i = 1; i <= bench_trials; i++){
+// void benchmarkMaze(std::string maze_type, int rows, int cols, int bench_trials){
+//     float total_time = 0.f;
+//     float fastest_trial = 999999.f;
+//     float slowest_trial = 0.f;
+//     std::cout << "Benchmarking maze generation time..." << std::endl;
+//     Timer benchmark_timer("Benchmarking procedure");
+//     for(int i = 1; i <= bench_trials; i++){
 
-        std::unique_ptr<Maze> maze = MazeFactory::createMazeByType(maze_type, rows, cols);
-        Timer trial_timer("Benchmark trial", false);
-        (*maze).generateMaze();
-        float trial_time = trial_timer.getTotalDuration();
-        total_time += trial_time;
-        if (trial_time < fastest_trial)
-            fastest_trial = trial_time;
-        else if (trial_time > slowest_trial)
-            slowest_trial = trial_time;
+//         std::unique_ptr<Maze> maze = MazeFactory::createMazeByType(maze_type, rows, cols);
+//         Timer trial_timer("Benchmark trial", false);
+//         (*maze).generateMaze();
+//         float trial_time = trial_timer.getTotalDuration();
+//         total_time += trial_time;
+//         if (trial_time < fastest_trial)
+//             fastest_trial = trial_time;
+//         else if (trial_time > slowest_trial)
+//             slowest_trial = trial_time;
             
-        if(i % 50 == 0 || i == bench_trials) {
-            std::cout << "\t" << i << "/" << bench_trials << " trials complete." << std::endl;
-        }
+//         if(i % 50 == 0 || i == bench_trials) {
+//             std::cout << "\t" << i << "/" << bench_trials << " trials complete." << std::endl;
+//         }
         
-    }
+//     }
     
-    std::cout << "average trial time: " << total_time/bench_trials << std::endl;
-    std::cout << "Fastest trial: " << fastest_trial << std::endl;
-    std::cout << "Slowest trial: " << slowest_trial << std::endl;
-}
+//     std::cout << "average trial time: " << total_time/bench_trials << std::endl;
+//     std::cout << "Fastest trial: " << fastest_trial << std::endl;
+//     std::cout << "Slowest trial: " << slowest_trial << std::endl;
+// }
 
 int main(){
 
@@ -43,12 +44,13 @@ int main(){
         Timer maze_timer("Custom Maze");
         (*maze).generateMaze();
         std::cout << "Generating maze took: " << maze_timer << std::endl;
-        MazeSolver::solveMaze(*maze, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
+        auto[solution, solution_display] = MazeSolver::solveMaze(*maze, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
+        mazeUtils::drawMazeToConsole(solution_display);
         
         //(*maze).saveMaze();
     }
     
-    
-    //benchmarkMaze("Wilsons", 100, 100, 1);
+     
+    //mazeBenchmarking::benchmarkMaze("Wilsons", 100, 100, 1);
     
 }
