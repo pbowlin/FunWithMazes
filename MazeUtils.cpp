@@ -75,4 +75,47 @@ namespace mazeUtils {
         maze_file.close();
         
     }
+    
+    void saveMazeAsImg(const Maze& maze, const std::vector<std::vector<std::string>>& maze_display){
+        std::ofstream out("ColorMaze.ppm", std::ios::binary | std::ios::out | std::ios::trunc);
+        auto[num_rows, num_cols] = maze.getSize();
+        num_rows = num_rows*2 + 1;
+        num_cols = num_cols*2 + 1;
+        
+        std::string header = "P3\n" + std::to_string(num_cols) + " " + std::to_string(num_rows) + "\n255\n";
+        out << header;
+        
+        for(const auto& row : maze_display){
+            
+            for(const auto& elem : row) {
+                std::string elem_color;
+                
+                // Determine the image pixel color based on the type of maze element we're drawing.
+                if(elem == Maze::DisplayCharacters::wall) {
+                    elem_color = "0 0 0\n"; // Walls are black
+                } else if(elem == Maze::DisplayCharacters::room ||
+                            elem == Maze::DisplayCharacters::vert_passage ||
+                            elem == Maze::DisplayCharacters::horiz_passage){
+                    elem_color = "255 255 255\n"; // Rooms and passages are white
+                } else if(elem == Maze::DisplayCharacters::solution_path){
+                    elem_color = "0 255 0\n"; // Solution path is green
+                } else if(elem == Maze::DisplayCharacters::solution_touched){
+                    elem_color = "0 0 200\n"; // Solution path is blue
+                } else if(elem == Maze::DisplayCharacters::start_room){
+                    elem_color = "255 0 255\n"; // Start room is purple
+                } else if(elem == Maze::DisplayCharacters::finish_room){
+                    elem_color = "255 0 0\n"; // Finish room is red
+                }
+                
+                out << elem_color;
+            }
+            
+        }
+        
+        out.close();
+        
+        // Now convert the file from .ppm into more normal .png format and then remove the .ppm file.
+        system("convert ColorMaze.ppm ColorMaze.png");
+        system("rm ColorMaze.ppm");
+    }
 }

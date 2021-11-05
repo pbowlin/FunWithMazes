@@ -45,7 +45,8 @@ int main(){
         (*maze).generateMaze();
         std::cout << "Generating maze took: " << maze_timer << std::endl;
         auto[solution, solution_display] = MazeSolver::solveMaze(*maze, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
-        mazeUtils::drawMazeToConsole(solution_display);
+        //mazeUtils::drawMazeToConsole(solution_display);
+        mazeUtils::saveMazeAsImg(*maze, solution_display);
         
         //(*maze).saveMaze();
     }
