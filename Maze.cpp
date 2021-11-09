@@ -74,6 +74,10 @@ std::tuple<int, int> Maze::getSize() const {
     return {maze_rows, maze_cols};
 }
 
+std::string Maze::getType() const {
+    return type;
+}
+
 void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display) const {
     
     // Initialize maze to be entirely walls

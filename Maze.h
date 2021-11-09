@@ -25,6 +25,7 @@ class Maze {
     CellCoords getStart() const;
     CellCoords getFinish() const;
     std::tuple<int, int> getSize() const;
+    std::string getType() const;
     
     
     struct DisplayCharacters {
@@ -50,6 +51,7 @@ class Maze {
     
     int randomlySelectNextIndex(int num_options);
     
+    std::string type;
     int maze_rows, maze_cols;
     CellCoords start;
     CellCoords finish;

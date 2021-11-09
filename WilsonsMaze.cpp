@@ -11,7 +11,7 @@
 WilsonsMaze::WilsonsMaze(int rows, int cols) :
     Maze(rows, cols)
 {
-
+    type = "WilsonsMaze";
     Maze::initializeCells(rows, cols);
 }
 

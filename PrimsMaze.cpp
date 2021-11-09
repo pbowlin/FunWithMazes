@@ -9,7 +9,7 @@
 PrimsMaze::PrimsMaze(int rows, int cols) :
     Maze(rows, cols)
 {
-
+    type = "PrimsMaze";
     Maze::initializeCells(rows, cols);
 }
 

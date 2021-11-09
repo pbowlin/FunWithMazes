@@ -76,9 +76,16 @@ namespace mazeUtils {
         
     }
     
-    void saveMazeAsImg(const Maze& maze, const std::vector<std::vector<std::string>>& maze_display){
-        std::ofstream out("ColorMaze.ppm", std::ios::binary | std::ios::out | std::ios::trunc);
+    void saveMazeAsImg(const Maze& maze, const std::vector<std::vector<std::string>>& maze_display, int scale){
+        std::string maze_type = maze.getType();
         auto[num_rows, num_cols] = maze.getSize();
+        
+        std::string filename_base = maze_type + "_" + std::to_string(num_rows) + "x" + std::to_string(num_cols);
+        std::string filename_ppm = filename_base + ".ppm";
+        std::string filename_png = filename_base + ".png";
+        
+        std::ofstream out(filename_ppm, std::ios::binary | std::ios::out | std::ios::trunc);
+        
         num_rows = num_rows*2 + 1;
         num_cols = num_cols*2 + 1;
         
@@ -115,7 +122,10 @@ namespace mazeUtils {
         out.close();
         
         // Now convert the file from .ppm into more normal .png format and then remove the .ppm file.
-        system("convert ColorMaze.ppm ColorMaze.png");
-        system("rm ColorMaze.ppm");
+        std::string conversion_command = "convert " + filename_ppm + " -scale " + std::to_string(scale * 100) + "% " + filename_png;
+        //std::string conversion_command = "convert " + filename_ppm + " " + filename_png;
+        std::string remove_command = "rm " + filename_ppm;
+        system(conversion_command.c_str()); // convert image.ppm -scale 400x result.png
+        system(remove_command.c_str());
     }
 }

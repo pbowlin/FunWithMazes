@@ -7,7 +7,7 @@
 DFSMaze::DFSMaze(int rows, int cols) :
     Maze(rows, cols)
 {
-
+    type = "DFSMaze";
     Maze::initializeCells(rows, cols);
 }
 
@@ -22,18 +22,18 @@ void DFSMaze::generateMaze(){
         CellCoords currentCell = path.top();
         std::vector<CellCoords> neighbors = Maze::getNeighbors(currentCell.row, currentCell.col);
         
-        std::vector<CellCoords> unvisited;
+        std::vector<CellCoords> unvisited_neighbors;
         
         for(CellCoords cell : neighbors){
             if(!Maze::cellVisited(visited, cell)){
-                unvisited.push_back(cell);
+                unvisited_neighbors.push_back(cell);
             }
         }
         
-        if(unvisited.empty()){
+        if(unvisited_neighbors.empty()){
             path.pop();
         } else {
-            CellCoords nextCell = unvisited[Maze::randomlySelectNextIndex(unvisited.size())];
+            CellCoords nextCell = unvisited_neighbors[Maze::randomlySelectNextIndex(unvisited_neighbors.size())];
  
             // Get the maze cells from the actual maze so we can add passages in the maze
             MazeCell* toMazeCell = &(Maze::maze[nextCell.row][nextCell.col]);
