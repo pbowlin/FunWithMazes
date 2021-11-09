@@ -26,12 +26,13 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     std::vector<CellCoords> solution;
     std::unordered_set<CellCoords> touched;
     
-    // Compares two cells by manhattan distance to the goal as a heuristic for the priority queue.
+    // Compares two cells by the provided heuristic for the priority queue.
+    // For priority queue this function should return true if the lhs goes BEFORE the rhs in the queue (meaning it would be a lower priority)
     auto lambda_compare = [finish, &heuristic_func](const CellCoords& lhs, const CellCoords& rhs){
-        int lhs_manhattan = heuristic_func(lhs, finish);
-        int rhs_manhattan = heuristic_func(rhs, finish);
+        int lhs_score = heuristic_func(lhs, finish);
+        int rhs_score = heuristic_func(rhs, finish);
         
-        return lhs_manhattan >= rhs_manhattan;
+        return lhs_score >= rhs_score;
     };
     
     std::priority_queue<CellCoords, std::vector<CellCoords>, decltype(lambda_compare)> open_cells(lambda_compare); // Holds the nodes that may need to be expanded. The current best option for expansion is always on top.

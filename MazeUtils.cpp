@@ -80,7 +80,7 @@ namespace mazeUtils {
         std::string maze_type = maze.getType();
         auto[num_rows, num_cols] = maze.getSize();
         
-        std::string filename_base = maze_type + "_" + std::to_string(num_rows) + "x" + std::to_string(num_cols);
+        std::string filename_base = "./MazeImages/" + maze_type + "_" + std::to_string(num_rows) + "x" + std::to_string(num_cols);
         std::string filename_ppm = filename_base + ".ppm";
         std::string filename_png = filename_base + ".png";
         
