@@ -100,10 +100,11 @@ namespace mazeUtils {
                 // Determine the image pixel color based on the type of maze element we're drawing.
                 if(elem == Maze::DisplayCharacters::wall) {
                     elem_color = "0 0 0\n"; // Walls are black
-                } else if(elem == Maze::DisplayCharacters::room ||
-                            elem == Maze::DisplayCharacters::vert_passage ||
+                } else if(elem == Maze::DisplayCharacters::room){
+                    elem_color = "255 255 255\n"; // Rooms are white
+                } else if (elem == Maze::DisplayCharacters::vert_passage ||
                             elem == Maze::DisplayCharacters::horiz_passage){
-                    elem_color = "255 255 255\n"; // Rooms and passages are white
+                    elem_color = "255 255 255\n"; // passages are white
                 } else if(elem == Maze::DisplayCharacters::solution_path){
                     elem_color = "0 255 0\n"; // Solution path is green
                 } else if(elem == Maze::DisplayCharacters::solution_touched){

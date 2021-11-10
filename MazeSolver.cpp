@@ -8,12 +8,9 @@
 #include <string>
 
 std::tuple<std::vector<CellCoords>, std::vector<std::vector<std::string>>> MazeSolver::solveMaze(const Maze& maze, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
-                    std::function<std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>>(const std::vector<std::vector<MazeCell>>&, const CellCoords&, const CellCoords&, 
-                    std::function<int(const CellCoords&, const CellCoords&)>)>solver_func){
+                    std::function<std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>>(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>)>solver_func){
                         
-    const CellCoords& start = maze.getStart();
-    const CellCoords& finish = maze.getFinish();
-    auto[solution, touched] = solver_func(maze.getMaze(), start, finish, heuristic_func); // <--- return is captured with structured bindings. Cool!
+    auto[solution, touched] = solver_func(maze, heuristic_func); // <--- return is captured with structured bindings. Cool!
     
     std::vector<std::vector<std::string>> solution_display = generateSolutionDisplay(maze, solution, touched);
     
@@ -21,8 +18,12 @@ std::tuple<std::vector<CellCoords>, std::vector<std::vector<std::string>>> MazeS
 }
 
         
-std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver(const std::vector<std::vector<MazeCell>>& maze, const CellCoords& start, const CellCoords& finish, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
+std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
     std::cout << "Solving maze with A* algorithm" << std::endl;
+    const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
+    const CellCoords start = maze_obj.getStart();
+    const CellCoords finish = maze_obj.getFinish();
+    
     std::vector<CellCoords> solution;
     std::unordered_set<CellCoords> touched;
     

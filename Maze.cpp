@@ -91,7 +91,7 @@ void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_displ
         for(int j = 0; j < maze_cols; ++j){
             maze_display[i*2+1][j*2+1] = Maze::DisplayCharacters::room; // All rooms are open
             
-            // Now check if we need to knock out any walls to the neighboring rooms
+            // Now check if we need to knock out any walls to the neighboring rooms.
             // Because we iterate left to right, top to bottom we only 
             // need to check the cells to the right and below the current cell.
             if(maze[i][j].isConnected(MazeCell(i, j+1))){

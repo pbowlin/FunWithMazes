@@ -32,8 +32,8 @@ class Maze {
       // Note that the characters are formatted to colorize them in the linux terminal i.e \033[;32mThis text is green\033[0m
       inline static std::string wall = "███";
       inline static std::string room = "   "; // "··"
-      inline static std::string vert_passage = "   ";
-      inline static std::string horiz_passage = "   ";
+      inline static std::string vert_passage = " ^ ";
+      inline static std::string horiz_passage = " - ";
       inline static std::string solution_path = " \033[1;32m*\033[0m ";
       inline static std::string solution_touched = " \033[;36m*\033[0m ";
       inline static std::string start_room = " \033[1;31mS\033[0m ";
