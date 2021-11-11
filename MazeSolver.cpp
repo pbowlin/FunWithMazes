@@ -1,4 +1,5 @@
 #include "MazeSolver.h"
+#include "MazeUtils.h"
 
 #include <iostream>
 #include <queue>
@@ -6,6 +7,8 @@
 #include <unordered_set>
 #include <limits>
 #include <string>
+#include <algorithm>
+
 
 std::tuple<std::vector<CellCoords>, std::vector<std::vector<std::string>>> MazeSolver::solveMaze(const Maze& maze, std::function<int(const CellCoords&, const CellCoords&)> heuristic_func,
                     std::function<std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>>(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>)>solver_func){
@@ -86,6 +89,128 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     return {solution, touched };
 }
 
+std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::TremauxSolver(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
+    std::cout << "Solving maze with Tremaux's algorithm" << std::endl;
+    const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
+    const CellCoords start = maze_obj.getStart();
+    const CellCoords finish = maze_obj.getFinish();
+    
+    std::vector<CellCoords> solution;
+    std::unordered_set<CellCoords> touched;
+    
+    using marks = std::unordered_map<std::string, int>; 
+    std::unordered_map<CellCoords, marks> intersection_tracker;
+    //std::unordered_map<CellCoords, CellCoords> came_from; // Tracks the path back to the start (keeps the path with only 1 mark at each intersection)
+    
+    CellCoords current = start;
+    CellCoords prev = start;
+    
+    //Lambda to figure out what direction a cell is in reference to an intersection cell
+    auto getCellDirection = [](const CellCoords& intersection_cell, const CellCoords& reference_cell){
+        if(reference_cell.col - intersection_cell.col > 0){
+            return "East";
+        } else if(reference_cell.col - intersection_cell.col < 0){
+            return "West";
+        } else if(reference_cell.row - intersection_cell.row > 0){
+            return "North";
+        } else {
+            return "South";
+        }
+    };
+    
+    int next_passage_idx;
+    int loop_count=0;
+    while(current != finish){
+        touched.insert(current);
+        const std::vector<MazeCell>* passages = &(maze[current.row][current.col].getPassages());
+        if(passages->size() == 1){ 
+            // Current cell is a dead end, go back
+            next_passage_idx = 0;
+            
+        } else if( passages->size() == 2) {
+            // Current cell is a passage, continue forward
+            next_passage_idx = (*passages)[0].getCellCoords() == prev ? 1 : 0;
+        } else {
+            // Current cell is an intersection
+            
+            bool first_time_at_intersection = intersection_tracker.count(current) == 0;
+            intersection_tracker[current][getCellDirection(current,prev)] += 1; // Mark the intersection from the direction we came
+            
+            if(first_time_at_intersection){
+                // We have never been to this intersection before so proceed in a random new direction
+                do {
+                    next_passage_idx = mazeUtils::randomlySelectNextIndex((*passages).size());
+                } while ((*passages)[next_passage_idx].getCellCoords() == prev );
+                
+                // Mark the intersection with the direction of the path we chose
+                intersection_tracker[current][getCellDirection(current, (*passages)[next_passage_idx].getCellCoords())] = 1;
+            } else {
+                // We have visited this intersection before
+                if (intersection_tracker[current][getCellDirection(current,prev)] == 1 ){
+                    // There are not 2 marks on the direction from which we entered, so mark it again and go back the way we came
+                    intersection_tracker[current][getCellDirection(current,prev)] += 1;
+                    for(int i = 0; i < (*passages).size(); ++i){
+                        if((*passages)[i].getCellCoords() == prev){
+                            next_passage_idx = i;
+                            break;
+                        }
+                    }
+                } else {
+                    // There are 2 marks on the direction from which we entered, so proceed towards the direction with the fewest marks.
+                    int fewest_marks = 9999;
+                    for(int i = 0; i < (*passages).size(); ++i){
+                        CellCoords passage = (*passages)[i].getCellCoords();
+                        int passage_marks = intersection_tracker[current][getCellDirection(current, passage)];
+                        if(passage_marks < fewest_marks){
+                            next_passage_idx = i;
+                            fewest_marks = passage_marks;
+                        }
+                        //next_passage_idx = intersection_tracker[current][getCellDirection(current, passage)] < fewest_marks ? i : next_passage_idx;
+                    }
+                    intersection_tracker[current][getCellDirection(current, (*passages)[next_passage_idx].getCellCoords())] += 1;
+                }
+            }
+        }
+        // Advance to the next cell
+        prev = current;
+        current = (*passages)[next_passage_idx].getCellCoords();
+        
+    }
+    
+    // Lastly, reconstruct the path back to the start by following the intersections with only 1 mark.
+    solution.push_back(finish);
+    solution.push_back(prev);
+    
+    current = prev;
+    prev = finish;
+    std::cout << "Reconstructing path" << std::endl;
+    
+    while(current != start){
+        const std::vector<MazeCell>* passages = &(maze[current.row][current.col].getPassages());
+        
+        if(intersection_tracker.count(current) != 0) {
+            // This is an intersection. Find the direction with only 1 mark to know which way to proceed
+            for(int i = 0; i < (*passages).size(); ++i){
+                CellCoords passage = (*passages)[i].getCellCoords();
+                if(intersection_tracker[current][getCellDirection(current, passage)] == 1 && passage != prev){
+                    next_passage_idx = i;
+                    break;
+                }
+            }
+        } else {
+            // This is just a passage so continue forward
+            next_passage_idx = (*passages)[0].getCellCoords() == prev ? 1 : 0;
+        }
+        
+        prev = current;
+        current = (*passages)[next_passage_idx].getCellCoords();
+        solution.push_back(current);
+    }
+    
+    std::reverse(solution.begin(), solution.end());
+    return {solution, touched};
+}
+
 std::vector<CellCoords> MazeSolver::reconstruct_path(const std::unordered_map<CellCoords, CellCoords>& came_from, const CellCoords& finish){
     std::vector<CellCoords> path;
     path.push_back(finish);
@@ -94,8 +219,10 @@ std::vector<CellCoords> MazeSolver::reconstruct_path(const std::unordered_map<Ce
         path.push_back(came_from.at(path.back()));
     }
     
+    std::reverse(path.begin(), path.end());
     return path;
 }
+
 
 std::vector<std::vector<std::string>> MazeSolver::generateSolutionDisplay(const Maze& maze, const std::vector<CellCoords>& solution, const std::unordered_set<CellCoords>& touched){
     std::vector<std::vector<std::string>> maze_display;

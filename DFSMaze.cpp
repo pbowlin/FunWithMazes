@@ -1,4 +1,5 @@
 #include "DFSMaze.h"
+#include "MazeUtils.h"
 
 #include <iostream>
 #include <stack>
@@ -33,7 +34,7 @@ void DFSMaze::generateMaze(){
         if(unvisited_neighbors.empty()){
             path.pop();
         } else {
-            CellCoords nextCell = unvisited_neighbors[Maze::randomlySelectNextIndex(unvisited_neighbors.size())];
+            CellCoords nextCell = unvisited_neighbors[mazeUtils::randomlySelectNextIndex(unvisited_neighbors.size())];
  
             // Get the maze cells from the actual maze so we can add passages in the maze
             MazeCell* toMazeCell = &(Maze::maze[nextCell.row][nextCell.col]);

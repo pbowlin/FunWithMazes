@@ -11,6 +11,7 @@ struct CellCoords {
 };
 
 bool operator==(const CellCoords& lhs , const CellCoords& rhs);
+bool operator!=(const CellCoords& lhs , const CellCoords& rhs);
 std::ostream& operator<<(std::ostream& o, const CellCoords& cc);
 
 class MazeCell {

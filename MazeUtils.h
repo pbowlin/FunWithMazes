@@ -13,4 +13,5 @@ namespace mazeUtils {
     void drawMazeToConsole(const std::vector<std::vector<std::string>>& maze_display);
     void saveMazeAsTxt(const std::vector<std::vector<std::string>>& maze_display);
     void saveMazeAsImg(const Maze& maze, const std::vector<std::vector<std::string>>& maze_display, int scale);
+    int randomlySelectNextIndex(int num_options);
 }

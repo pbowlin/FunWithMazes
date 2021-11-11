@@ -12,6 +12,10 @@ bool operator==(const CellCoords& lhs , const CellCoords& rhs){
     return lhs.row == rhs.row && lhs.col == rhs.col;
 }
 
+bool operator!=(const CellCoords& lhs , const CellCoords& rhs){
+    return !(lhs == rhs);
+}
+
 std::ostream& operator<<(std::ostream& o, const CellCoords& cc ){
     return o << "(" << cc.row << ", " << cc.col << ")";
 }

@@ -1,4 +1,5 @@
 #include "WilsonsMaze.h"
+#include "MazeUtils.h"
 
 #include <iostream>
 #include <random>
@@ -56,7 +57,7 @@ std::list<CellCoords> WilsonsMaze::performRandomWalk(CellCoords start_coords, co
         if(neighbors.size() > 1)
             neighbors.erase(std::remove(neighbors.begin(), neighbors.end(), previous_coords), neighbors.end());
 
-        CellCoords next_coords = neighbors[Maze::randomlySelectNextIndex(neighbors.size())];
+        CellCoords next_coords = neighbors[mazeUtils::randomlySelectNextIndex(neighbors.size())];
 
         //Check to see if the new cell connects to an already-built portion of the maze
         if(cells_not_in_maze.count(next_coords) == 0){

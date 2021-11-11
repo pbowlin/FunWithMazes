@@ -33,7 +33,7 @@ class Maze {
       inline static std::string wall = "███";
       inline static std::string room = "   "; // "··"
       inline static std::string vert_passage = " ^ ";
-      inline static std::string horiz_passage = " - ";
+      inline static std::string horiz_passage = " ^ ";
       inline static std::string solution_path = " \033[1;32m*\033[0m ";
       inline static std::string solution_touched = " \033[;36m*\033[0m ";
       inline static std::string start_room = " \033[1;31mS\033[0m ";
@@ -48,8 +48,6 @@ class Maze {
     virtual std::vector<CellCoords> getNeighbors(int row, int col); 
     virtual void pickStartAndFinish();
     virtual bool cellVisited(const std::vector<CellCoords>& visited, const CellCoords& cell);
-    
-    int randomlySelectNextIndex(int num_options);
     
     std::string type;
     int maze_rows, maze_cols;

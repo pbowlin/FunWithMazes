@@ -1,4 +1,5 @@
 #include "PrimsMaze.h"
+#include "MazeUtils.h"
 
 #include <iostream>
 #include <unordered_set>
@@ -25,7 +26,7 @@ void PrimsMaze::generateMaze(){
     walls.insert(walls.end(), initial_walls.begin(), initial_walls.end());
     
     while(!walls.empty()){
-        int random_wall_idx = Maze::randomlySelectNextIndex(walls.size());
+        int random_wall_idx = mazeUtils::randomlySelectNextIndex(walls.size());
         Wall* random_wall = &walls[random_wall_idx];
         
         // Check to see if both rooms have been visited
