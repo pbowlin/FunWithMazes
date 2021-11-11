@@ -19,8 +19,8 @@ int main(){
         std::vector<std::vector<std::string>> maze_display;
         //(*maze).generateMazeDisplay(maze_display);
         //mazeUtils::drawMazeToConsole(maze_display);
-        //auto[solution, solution_display] = MazeSolver::solveMaze(*maze, &CellCoords::euclidean_distance, &MazeSolver::AStarSolver);
-        auto[solution, solution_display] = MazeSolver::solveMaze(*maze, &CellCoords::euclidean_distance, &MazeSolver::TremauxSolver);
+        //auto[solution, solution_display] = MazeSolver::solveMaze(*maze, &MazeSolver::AStarSolver, &CellCoords::euclidean_distance);
+        auto[solution, solution_display] = MazeSolver::solveMaze(*maze, &MazeSolver::TremauxSolver);
         //mazeUtils::drawMazeToConsole(solution_display);
         mazeUtils::saveMazeAsImg(*maze, solution_display, 1);
         
