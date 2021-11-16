@@ -42,8 +42,8 @@ void DFSMaze::generateMaze(){
             MazeCell* fromMazeCell = &(Maze::maze[currentCell.row][currentCell.col]);
             
             // Add passages between the two cells of the actual maze
-            fromMazeCell->addPassage(*toMazeCell);
-            toMazeCell->addPassage(*fromMazeCell);
+            fromMazeCell->addPassage(nextCell);
+            toMazeCell->addPassage(currentCell);
             
             visited.push_back(nextCell);
             path.push(nextCell);

@@ -88,8 +88,8 @@ void WilsonsMaze::addPathToMaze(const std::list<CellCoords>& path, std::unordere
     auto cell_A_iter = path.begin();
     auto cell_B_iter = ++path.begin();
     while(cell_B_iter != path.end()){
-        Maze::maze[(*cell_A_iter).row][(*cell_A_iter).col].addPassage(Maze::maze[(*cell_B_iter).row][(*cell_B_iter).col]);
-        Maze::maze[(*cell_B_iter).row][(*cell_B_iter).col].addPassage(Maze::maze[(*cell_A_iter).row][(*cell_A_iter).col]);
+        Maze::maze[(*cell_A_iter).row][(*cell_A_iter).col].addPassage(*cell_B_iter);
+        Maze::maze[(*cell_B_iter).row][(*cell_B_iter).col].addPassage(*cell_A_iter);
         
         cells_not_in_maze.erase(*cell_A_iter);
         

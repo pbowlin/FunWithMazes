@@ -17,16 +17,16 @@ std::ostream& operator<<(std::ostream& o, const CellCoords& cc);
 class MazeCell {
     private:
         CellCoords coords;
-        std::vector<MazeCell> has_passages_to;
+        std::vector<CellCoords> has_passages_to;
         
     public:
         
         MazeCell(int row, int col);
         MazeCell() = delete;
-        void addPassage(MazeCell& connection);
+        void addPassage(const CellCoords& connection);
         CellCoords getCellCoords() const;
-        const std::vector<MazeCell>& getPassages() const;
-        bool isConnected(const MazeCell& mc) const;
+        const std::vector<CellCoords>& getPassages() const;
+        bool isConnected(const CellCoords& cc) const;
         
         void printCellCoords();
         void printPassages();

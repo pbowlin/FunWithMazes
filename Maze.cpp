@@ -53,7 +53,10 @@ void Maze::listCellsWithPassages() const {
     for(int row = 0; row < maze_rows; ++row){
         for (int col = 0; col < maze_cols; ++col){
             std::cout << maze[row][col] << " -> ";
-            std::cout << (maze[row][col].getPassages()) << std::endl;
+            for(auto cc : maze[row][col].getPassages()){
+                std::cout << cc << ", ";
+            }
+            std::cout << std::endl;
         }
     }
 }
@@ -94,11 +97,11 @@ void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_displ
             // Now check if we need to knock out any walls to the neighboring rooms.
             // Because we iterate left to right, top to bottom we only 
             // need to check the cells to the right and below the current cell.
-            if(maze[i][j].isConnected(MazeCell(i, j+1))){
+            if(maze[i][j].isConnected({i, j+1})){
                 maze_display[i*2+1][j*2+2] = Maze::DisplayCharacters::horiz_passage;
             }
             
-            if(maze[i][j].isConnected(MazeCell(i+1, j))){
+            if(maze[i][j].isConnected({i+1, j})){
                 maze_display[i*2+2][j*2+1] = Maze::DisplayCharacters::vert_passage;
             }
         }

@@ -77,17 +77,17 @@ MazeCell::MazeCell(int row, int col) :
 
 }
 
-void MazeCell::addPassage(MazeCell& connection){
+void MazeCell::addPassage(const CellCoords& connection){
     has_passages_to.push_back(connection);
 }
 
-const std::vector<MazeCell>& MazeCell::getPassages() const{
+const std::vector<CellCoords>& MazeCell::getPassages() const{
     return has_passages_to;
 }
 
-bool MazeCell::isConnected(const MazeCell& mc) const{
-    for(const MazeCell& passage : has_passages_to){
-        if (passage == mc)
+bool MazeCell::isConnected(const CellCoords& cc) const{
+    for(const CellCoords& passage : has_passages_to){
+        if (passage == cc)
             return true;
     }
     return false;
@@ -102,8 +102,8 @@ void MazeCell::printCellCoords(){
 }
 
 void MazeCell::printPassages() {
-    for (MazeCell& mc : has_passages_to){
+    for (CellCoords& cc : has_passages_to){
         std::cout << "\t"; 
-        mc.printCellCoords();
+        std::cout << cc << std::endl;
     }
 }

@@ -38,8 +38,8 @@ void PrimsMaze::generateMaze(){
             MazeCell* room_A = &(Maze::maze[(random_wall->side_A).row][(random_wall->side_A).col]);
             MazeCell* room_B = &(Maze::maze[(random_wall->side_B).row][(random_wall->side_B).col]);
             
-            room_A->addPassage(*room_B);
-            room_B->addPassage(*room_A);
+            room_A->addPassage(room_B->getCellCoords());
+            room_B->addPassage(room_A->getCellCoords());
             
             // Mark the unvisited cell as visited
             visited.insert(unvisited_side);
@@ -68,10 +68,10 @@ std::vector<Wall> PrimsMaze::getWalls(const CellCoords& cell_coords){
     
     MazeCell* cell = &(Maze::maze[cell_coords.row][cell_coords.col]);
     for(const CellCoords& neighbor_coords : neighbors_coords) {
-        MazeCell* neighbor = &(Maze::maze[neighbor_coords.row][neighbor_coords.col]);
+        //MazeCell* neighbor = &(Maze::maze[neighbor_coords.row][neighbor_coords.col]);
         
         // Check the actual maze for walls between each neighbor and this cell
-        if(!(*cell).isConnected(*neighbor)){
+        if(!(cell->isConnected(neighbor_coords))){
             walls.push_back( {cell_coords, neighbor_coords} );
         }
     }

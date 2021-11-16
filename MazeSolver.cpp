@@ -9,7 +9,8 @@
 #include <string>
 #include <algorithm>
 
-        
+     
+//////////////////////////////////////////////////////////////// TODO: CHECK IF THIS IS IMPLEMENTED CORRECTLY? ESTIMATED COST TO GOAL IS NOT REALLY USED?    
 std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
     std::cout << "Solving maze with A* algorithm" << std::endl;
     const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
@@ -56,17 +57,17 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
         
         open_cells.pop();
         expansion_candidates.erase(current);
-        for(const MazeCell& passage : maze[current.row][current.col].getPassages()){
+        for(const CellCoords& passage : maze[current.row][current.col].getPassages()){
             int path_to_start_cost = cheapest_path_from_start[current].cost + 1;
             
-            if (path_to_start_cost < cheapest_path_from_start[passage.getCellCoords()].cost){
-                came_from[passage.getCellCoords()] = current;
-                cheapest_path_from_start[passage.getCellCoords()].cost = path_to_start_cost;
-                estimated_cost_to_goal[passage.getCellCoords()].cost = path_to_start_cost + heuristic_func(passage.getCellCoords(), finish);
+            if (path_to_start_cost < cheapest_path_from_start[passage].cost){
+                came_from[passage] = current;
+                cheapest_path_from_start[passage].cost = path_to_start_cost;
+                estimated_cost_to_goal[passage].cost = path_to_start_cost + heuristic_func(passage, finish);
                 
-                if(expansion_candidates.count(passage.getCellCoords()) == 0){
-                    open_cells.push(passage.getCellCoords());
-                    expansion_candidates.insert(passage.getCellCoords());
+                if(expansion_candidates.count(passage) == 0){
+                    open_cells.push(passage);
+                    expansion_candidates.insert(passage);
                 }
                 
             }
@@ -89,7 +90,6 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     
     using marks = std::unordered_map<std::string, int>; 
     std::unordered_map<CellCoords, marks> intersection_tracker;
-    //std::unordered_map<CellCoords, CellCoords> came_from; // Tracks the path back to the start (keeps the path with only 1 mark at each intersection)
     
     CellCoords current = start;
     CellCoords prev = start;
@@ -111,14 +111,14 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     int loop_count=0;
     while(current != finish){
         touched.insert(current);
-        const std::vector<MazeCell>* passages = &(maze[current.row][current.col].getPassages());
+        const std::vector<CellCoords>* passages = &(maze[current.row][current.col].getPassages());
         if(passages->size() == 1){ 
             // Current cell is a dead end, go back
             next_passage_idx = 0;
             
         } else if( passages->size() == 2) {
             // Current cell is a passage, continue forward
-            next_passage_idx = (*passages)[0].getCellCoords() == prev ? 1 : 0;
+            next_passage_idx = (*passages)[0] == prev ? 1 : 0;
         } else {
             // Current cell is an intersection
             
@@ -128,18 +128,18 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
             if(first_time_at_intersection){
                 // We have never been to this intersection before so proceed in a random new direction
                 do {
-                    next_passage_idx = mazeUtils::randomlySelectNextIndex((*passages).size());
-                } while ((*passages)[next_passage_idx].getCellCoords() == prev );
+                    next_passage_idx = mazeUtils::randomlySelectNextIndex(passages->size());
+                } while ((*passages)[next_passage_idx] == prev );
                 
                 // Mark the intersection with the direction of the path we chose
-                intersection_tracker[current][getCellDirection(current, (*passages)[next_passage_idx].getCellCoords())] = 1;
+                intersection_tracker[current][getCellDirection(current, (*passages)[next_passage_idx])] = 1;
             } else {
                 // We have visited this intersection before
                 if (intersection_tracker[current][getCellDirection(current,prev)] == 1 ){
                     // There are not 2 marks on the direction from which we entered, so mark it again and go back the way we came
                     intersection_tracker[current][getCellDirection(current,prev)] += 1;
-                    for(int i = 0; i < (*passages).size(); ++i){
-                        if((*passages)[i].getCellCoords() == prev){
+                    for(int i = 0; i < passages->size(); ++i){
+                        if((*passages)[i] == prev){
                             next_passage_idx = i;
                             break;
                         }
@@ -147,8 +147,8 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
                 } else {
                     // There are 2 marks on the direction from which we entered, so proceed towards the direction with the fewest marks.
                     int fewest_marks = 9999;
-                    for(int i = 0; i < (*passages).size(); ++i){
-                        CellCoords passage = (*passages)[i].getCellCoords();
+                    for(int i = 0; i < passages->size(); ++i){
+                        CellCoords passage = (*passages)[i];
                         int passage_marks = intersection_tracker[current][getCellDirection(current, passage)];
                         if(passage_marks < fewest_marks){
                             next_passage_idx = i;
@@ -156,13 +156,13 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
                         }
                         //next_passage_idx = intersection_tracker[current][getCellDirection(current, passage)] < fewest_marks ? i : next_passage_idx;
                     }
-                    intersection_tracker[current][getCellDirection(current, (*passages)[next_passage_idx].getCellCoords())] += 1;
+                    intersection_tracker[current][getCellDirection(current, (*passages)[next_passage_idx])] += 1;
                 }
             }
         }
         // Advance to the next cell
         prev = current;
-        current = (*passages)[next_passage_idx].getCellCoords();
+        current = (*passages)[next_passage_idx];
         
     }
     
@@ -175,12 +175,12 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     std::cout << "Reconstructing path" << std::endl;
     
     while(current != start){
-        const std::vector<MazeCell>* passages = &(maze[current.row][current.col].getPassages());
+        const std::vector<CellCoords>* passages = &(maze[current.row][current.col].getPassages());
         
         if(intersection_tracker.count(current) != 0) {
             // This is an intersection. Find the direction with only 1 mark to know which way to proceed
-            for(int i = 0; i < (*passages).size(); ++i){
-                CellCoords passage = (*passages)[i].getCellCoords();
+            for(int i = 0; i < passages->size(); ++i){
+                CellCoords passage = (*passages)[i];
                 if(intersection_tracker[current][getCellDirection(current, passage)] == 1 && passage != prev){
                     next_passage_idx = i;
                     break;
@@ -188,11 +188,11 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
             }
         } else {
             // This is just a passage so continue forward
-            next_passage_idx = (*passages)[0].getCellCoords() == prev ? 1 : 0;
+            next_passage_idx = (*passages)[0] == prev ? 1 : 0;
         }
         
         prev = current;
-        current = (*passages)[next_passage_idx].getCellCoords();
+        current = (*passages)[next_passage_idx];
         solution.push_back(current);
     }
     

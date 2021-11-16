@@ -44,10 +44,12 @@ int main(){
         std::vector<std::vector<std::string>> maze_display;
         ////(*maze).generateMazeDisplay(maze_display);
         ////mazeUtils::drawMazeToConsole(maze_display);
-        ////auto[solution, solution_display] = MazeSolver::solveMaze(*maze, &MazeSolver::AStarSolver, &CellCoords::euclidean_distance);
-        auto[solution, solution_display] = MazeSolver::solveMaze(*maze, &MazeSolver::TremauxSolver);
-        ////mazeUtils::drawMazeToConsole(solution_display);
-        mazeUtils::saveMazeAsImg(*maze, solution_display, 1);
+        auto[solution_Astar, solution_display_Astar] = MazeSolver::solveMaze(*maze, &MazeSolver::AStarSolver, &CellCoords::euclidean_distance);
+        mazeUtils::saveMazeAsImg(*maze, solution_display_Astar, 1, "AStar");
+        //mazeUtils::drawMazeToConsole(solution_display_Astar);
+        auto[solution_trem, solution_display_trem] = MazeSolver::solveMaze(*maze, &MazeSolver::TremauxSolver);
+        //mazeUtils::drawMazeToConsole(solution_display_trem);
+        mazeUtils::saveMazeAsImg(*maze, solution_display_trem, 1, "Tremaux");
         
         //(*maze).saveMaze();
         //std::cout << "Bytes in use: " << alloc_metrics.allocated << ", allocations: " << alloc_metrics.count << std::endl;
