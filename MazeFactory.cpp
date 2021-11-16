@@ -32,7 +32,7 @@ std::unique_ptr<Maze> MazeFactory::createMaze() {
 
 }
 
-// Creates a Wilson's maze with 25 rows and 30 columns.
+// Creates a maze without needing user input. (Used for benchmarking)
 std::unique_ptr<Maze> MazeFactory::createMazeByType(std::string maze_type, int num_rows, int num_cols) {
     if(maze_type == "DFS") {
         return std::make_unique<DFSMaze>(num_rows, num_cols); 

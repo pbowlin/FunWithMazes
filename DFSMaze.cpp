@@ -19,11 +19,12 @@ void DFSMaze::generateMaze(){
     visited.push_back(maze[0][0].getCellCoords());
     path.push(maze[0][0].getCellCoords());
     
+    
     while(!path.empty()){
         CellCoords currentCell = path.top();
         std::vector<CellCoords> neighbors = Maze::getNeighbors(currentCell.row, currentCell.col);
-        
         std::vector<CellCoords> unvisited_neighbors;
+        
         
         for(CellCoords cell : neighbors){
             if(!Maze::cellVisited(visited, cell)){
@@ -47,7 +48,6 @@ void DFSMaze::generateMaze(){
             visited.push_back(nextCell);
             path.push(nextCell);
         }
-
     }
     
     pickStartAndFinish();
