@@ -6,8 +6,8 @@
 struct CellCoords {
     int row, col;
     
-    static int manhattan_distance(const CellCoords& cell_a, const CellCoords& cell_b);
-    static int euclidean_distance(const CellCoords& cell_a, const CellCoords& cell_b);
+    static double manhattan_distance(const CellCoords& cell_a, const CellCoords& cell_b);
+    static double euclidean_distance(const CellCoords& cell_a, const CellCoords& cell_b);
 };
 
 bool operator==(const CellCoords& lhs , const CellCoords& rhs);

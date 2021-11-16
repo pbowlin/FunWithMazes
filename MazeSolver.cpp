@@ -9,9 +9,142 @@
 #include <string>
 #include <algorithm>
 
-     
-//////////////////////////////////////////////////////////////// TODO: CHECK IF THIS IS IMPLEMENTED CORRECTLY? ESTIMATED COST TO GOAL IS NOT REALLY USED?    
-std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
+// This version of A Star will always add the cell to the open list if the path is less than the previous path. See comments in add passage block for details.
+std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver_ALWAYS_ADD(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
+    std::cout << "Solving maze with A* algorithm" << std::endl;
+    const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
+    const CellCoords start = maze_obj.getStart();
+    const CellCoords finish = maze_obj.getFinish();
+    
+    std::vector<CellCoords> solution;
+    std::unordered_set<CellCoords> touched;
+    
+    // Quick structure to default an int value to infinity rather than 0
+    struct path_cost {
+        double cost = std::numeric_limits<double>::max();
+    };
+    
+    std::unordered_map<CellCoords, CellCoords> came_from; // The key is a cell and the value is the cell that preceeds the key cell on the cheapest path from the start
+    std::unordered_map<CellCoords, path_cost> cheapest_path_from_start; // Maps each cell to its cost on the cheapest path from the start
+    cheapest_path_from_start[start].cost = 0;
+    
+    // Compares two cells by the provided heuristic for the priority queue.
+    // For priority queue this function should return true if the lhs goes BEFORE the rhs in the queue (meaning it would be a lower priority)
+    auto lambda_compare = [finish, &cheapest_path_from_start, &heuristic_func](const CellCoords& lhs, const CellCoords& rhs){
+        double lhs_score = cheapest_path_from_start[lhs].cost + heuristic_func(lhs, finish);
+        double rhs_score = cheapest_path_from_start[rhs].cost + heuristic_func(rhs, finish);
+        
+        return lhs_score >= rhs_score;
+    };
+    
+    std::priority_queue<CellCoords, std::vector<CellCoords>, decltype(lambda_compare)> open_cells(lambda_compare); // Holds the nodes that may need to be expanded. The current best option for expansion is always on top.
+    std::unordered_set<CellCoords> expansion_candidates; // Only purpose of this is to mirror the cells in the priority queue to allow constant time lookup to check if a cell is in the queue
+    open_cells.push(start);
+    expansion_candidates.insert(start);
+    
+    while(!open_cells.empty()){
+        CellCoords current = open_cells.top();
+        touched.insert(open_cells.top());
+        
+        if (current == finish){
+            solution = reconstruct_path(came_from, finish);
+            break;
+        }
+        
+        open_cells.pop();
+        expansion_candidates.erase(current);
+        for(const CellCoords& passage : maze[current.row][current.col].getPassages()){
+            int path_to_start_cost = cheapest_path_from_start[current].cost + 1;
+            
+            if (path_to_start_cost < cheapest_path_from_start[passage].cost){
+                came_from[passage] = current;
+                cheapest_path_from_start[passage].cost = path_to_start_cost;
+                
+                // TODO: This could be bad because if we don't check if the passage is already in the expansion candidates then we could end up with 
+                // multiple of the same node inside the expansion candidates.
+                open_cells.push(passage);
+                expansion_candidates.insert(passage);
+                
+                
+            }
+            
+        }
+        
+    }
+    
+    return {solution, touched };
+}
+
+// This version of A Star will only add the cell to the open list if the path is less than the previous path and the passage has not been added already. See comments in add passage block for details.
+std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver_ONLY_ADD_NEW(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
+    std::cout << "Solving maze with A* algorithm" << std::endl;
+    const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
+    const CellCoords start = maze_obj.getStart();
+    const CellCoords finish = maze_obj.getFinish();
+    
+    std::vector<CellCoords> solution;
+    std::unordered_set<CellCoords> touched;
+    
+    // Quick structure to default an int value to infinity rather than 0
+    struct path_cost {
+        double cost = std::numeric_limits<double>::max();
+    };
+    
+    std::unordered_map<CellCoords, CellCoords> came_from; // The key is a cell and the value is the cell that preceeds the key cell on the cheapest path from the start
+    std::unordered_map<CellCoords, path_cost> cheapest_path_from_start; // Maps each cell to its cost on the cheapest path from the start
+    cheapest_path_from_start[start].cost = 0;
+    
+    // Compares two cells by the provided heuristic for the priority queue.
+    // For priority queue this function should return true if the lhs goes BEFORE the rhs in the queue (meaning it would be a lower priority)
+    auto lambda_compare = [finish, &cheapest_path_from_start, &heuristic_func](const CellCoords& lhs, const CellCoords& rhs){
+        double lhs_score = cheapest_path_from_start[lhs].cost + heuristic_func(lhs, finish);
+        double rhs_score = cheapest_path_from_start[rhs].cost + heuristic_func(rhs, finish);
+        
+        return lhs_score >= rhs_score;
+    };
+    
+    std::priority_queue<CellCoords, std::vector<CellCoords>, decltype(lambda_compare)> open_cells(lambda_compare); // Holds the nodes that may need to be expanded. The current best option for expansion is always on top.
+    std::unordered_set<CellCoords> expansion_candidates; // Only purpose of this is to mirror the cells in the priority queue to allow constant time lookup to check if a cell is in the queue
+    open_cells.push(start);
+    expansion_candidates.insert(start);
+    
+    while(!open_cells.empty()){
+        CellCoords current = open_cells.top();
+        touched.insert(open_cells.top());
+        
+        if (current == finish){
+            solution = reconstruct_path(came_from, finish);
+            break;
+        }
+        
+        open_cells.pop();
+        expansion_candidates.erase(current);
+        for(const CellCoords& passage : maze[current.row][current.col].getPassages()){
+            int path_to_start_cost = cheapest_path_from_start[current].cost + 1;
+            
+            if (path_to_start_cost < cheapest_path_from_start[passage].cost){
+                came_from[passage] = current;
+                cheapest_path_from_start[passage].cost = path_to_start_cost;
+                
+                // TODO: I believe the below method could be bad because if we only add the passage to the open cells when it is not already in there then we are
+                // neglecting to re-order the priority queue when we find a better path to a cell we have already seen. 
+                if(expansion_candidates.count(passage) == 0){
+                    open_cells.push(passage);
+                    expansion_candidates.insert(passage);
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    return {solution, touched };
+}
+
+// This version of A Star will always only consider the cost to the goal when figuring which cell to expand next (This is not a correct A* but seems to be much less costly -- i.e. expand fewer
+// nodes -- for simple mazes like what I am generating... where the path is likely to be better if you are closer to the goal regardless of how you got there, since there is only 1 solution.)
+std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver_HEURISTIC_COST_ONLY(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
     std::cout << "Solving maze with A* algorithm" << std::endl;
     const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
     const CellCoords start = maze_obj.getStart();
