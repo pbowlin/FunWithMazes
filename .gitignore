@@ -31,9 +31,10 @@
 *.out
 *.app
 
-# Image files
+# Image and animation files
 *.png
 *.jpg
 *.ppm
 *.pbm
 *.pgm
+*.gif
