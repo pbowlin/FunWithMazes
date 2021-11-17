@@ -10,6 +10,12 @@ a given cell... regardless of whether or not there is a wall between them.
 #include <vector>
 #include <string>
 #include <tuple>
+#include <unordered_set>
+
+struct MazeSolutionDisplayElements {
+  const std::vector<CellCoords>& solution;
+  const std::unordered_set<CellCoords>& touched;
+};
 
 class Maze {
   public:
@@ -18,7 +24,7 @@ class Maze {
     virtual ~Maze() = default;
   
     virtual void generateMaze() = 0;
-    virtual void generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display) const;
+    virtual void generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display, MazeSolutionDisplayElements* solution_elems_ptr = nullptr) const;
     
     void listCellsWithPassages() const;
     const std::vector<std::vector<MazeCell>>& getMaze() const;

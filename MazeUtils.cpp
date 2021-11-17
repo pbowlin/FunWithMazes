@@ -140,3 +140,9 @@ namespace mazeUtils {
     }
     
 }
+
+namespace mazeAnimation {
+    void addAnimationFrame(const Maze& maze, const std::unordered_set<CellCoords>& touched, CellCoords current){
+        
+    }
+}

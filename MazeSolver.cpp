@@ -64,10 +64,13 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
                 // multiple of the same node inside the expansion candidates.
                 open_cells.push(passage);
                 expansion_candidates.insert(passage);
-                
-                
+ 
             }
             
+        }
+        
+        if(mazeAnimation::create_animation){
+            mazeAnimation::addAnimationFrame(maze_obj, touched, current);
         }
         
     }
@@ -346,25 +349,25 @@ std::vector<CellCoords> MazeSolver::reconstruct_path(const std::unordered_map<Ce
 }
 
 
-std::vector<std::vector<std::string>> MazeSolver::generateSolutionDisplay(const Maze& maze, const std::vector<CellCoords>& solution, const std::unordered_set<CellCoords>& touched){
-    std::vector<std::vector<std::string>> maze_display;
-    maze.generateMazeDisplay(maze_display);
+// std::vector<std::vector<std::string>> MazeSolver::generateSolutionDisplay(const Maze& maze, const std::vector<CellCoords>& solution, const std::unordered_set<CellCoords>& touched){
+//     std::vector<std::vector<std::string>> maze_display;
+//     maze.generateMazeDisplay(maze_display);
     
-    for(const CellCoords& touch : touched){
-        maze_display[touch.row*2 + 1][touch.col*2 + 1] = Maze::DisplayCharacters::solution_touched;
-    }
+//     for(const CellCoords& touch : touched){
+//         maze_display[touch.row*2 + 1][touch.col*2 + 1] = Maze::DisplayCharacters::solution_touched;
+//     }
     
-    for(const CellCoords& step : solution){
-        maze_display[step.row*2 + 1][step.col*2 + 1] = Maze::DisplayCharacters::solution_path;
-    }
+//     for(const CellCoords& step : solution){
+//         maze_display[step.row*2 + 1][step.col*2 + 1] = Maze::DisplayCharacters::solution_path;
+//     }
     
-    // Notate the start and finish cells because they were over-ridden by the solution path
-    CellCoords start = maze.getStart();
-    CellCoords finish = maze.getFinish();
+//     // Notate the start and finish cells because they were over-ridden by the solution path
+//     CellCoords start = maze.getStart();
+//     CellCoords finish = maze.getFinish();
 
-    maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
-    maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
+//     maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
+//     maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
     
-    return maze_display;
+//     return maze_display;
 
-}
+// }

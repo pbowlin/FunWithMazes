@@ -18,13 +18,16 @@ int main(){
         
         auto[solution_Astar, solution_display_Astar] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver_ALWAYS_ADD, &CellCoords::euclidean_distance);
         mazeUtils::saveMazeAsImg(maze, solution_display_Astar, 1, "AStar_ALWAYSADD");
-        auto[solution_Astart, solution_display_Astart] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver_ONLY_ADD_NEW, &CellCoords::euclidean_distance);
-        mazeUtils::saveMazeAsImg(maze, solution_display_Astart, 1, "AStar_ONLYNEW");
-        auto[solution_Astarb, solution_display_Astarb] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver_HEURISTIC_COST_ONLY, &CellCoords::euclidean_distance);
-        mazeUtils::saveMazeAsImg(maze, solution_display_Astarb, 1, "AStar_HEURISTIC");
-        auto[solution_trem, solution_display_trem] = MazeSolver::solveMaze(maze, &MazeSolver::TremauxSolver);
-        //mazeUtils::drawMazeToConsole(solution_display_trem);
-        mazeUtils::saveMazeAsImg(maze, solution_display_trem, 1, "Tremaux");
+        // auto[solution_Astart, solution_display_Astart] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver_ONLY_ADD_NEW, &CellCoords::euclidean_distance);
+        // mazeUtils::saveMazeAsImg(maze, solution_display_Astart, 1, "AStar_ONLYNEW");
+        // auto[solution_Astarb, solution_display_Astarb] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver_HEURISTIC_COST_ONLY, &CellCoords::euclidean_distance);
+        // mazeUtils::saveMazeAsImg(maze, solution_display_Astarb, 1, "AStar_HEURISTIC");
+        // auto[solution_trem, solution_display_trem] = MazeSolver::solveMaze(maze, &MazeSolver::TremauxSolver);
+        // //mazeUtils::drawMazeToConsole(solution_display_trem);
+        // mazeUtils::saveMazeAsImg(maze, solution_display_trem, 1, "Tremaux");
+        auto[height, width] = maze.getSize();
+        mazeAnimation::gif_filename = maze.getType() + "_" + std::to_string(height) + "x" + std::to_string(width) + ".gif";
+        std::cout << mazeAnimation::gif_filename << std::endl;
         
         
         

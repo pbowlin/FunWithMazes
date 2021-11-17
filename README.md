@@ -1,5 +1,5 @@
 # FunWithMazes
-Solo project to explore different maze generation and solving algorithms and techniques.
+Solo project to explore different maze generation and solving algorithms and techniques. I used this project as an excuse to try to play around with aspects of the C++ language that I was aware of but either had little experience with or perhaps had never used at all. It was more a learning excercise than an effort to design the best/most efficient maze generation and solving program. 
 
 As of now there are 3 maze generation algorithms and 2 maze solving algorithms.
 ## Maze Generation:

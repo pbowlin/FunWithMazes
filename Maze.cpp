@@ -80,7 +80,7 @@ std::string Maze::getType() const {
     return type;
 }
 
-void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display) const {
+void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display, MazeSolutionDisplayElements* solution_elems_ptr) const {
     
     // Initialize maze to be entirely walls
     for(int i = 0; i < maze_rows * 2 + 1; ++i){
@@ -106,36 +106,22 @@ void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_displ
         }
     }
     
+    if(solution_elems_ptr){
+        for(const CellCoords& touch : solution_elems_ptr->touched){
+            maze_display[touch.row*2 + 1][touch.col*2 + 1] = Maze::DisplayCharacters::solution_touched;
+        }
+        
+        for(const CellCoords& step : solution_elems_ptr->solution){
+            maze_display[step.row*2 + 1][step.col*2 + 1] = Maze::DisplayCharacters::solution_path;
+        }
+    }
+    
     // Notate the start and finish cells
     maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
     maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
-    // if(start.col == 0 && finish.col == maze_cols-1){
-    //     maze_display[start.row*2+1][0] = Maze::DisplayCharacters::start_room;
-    //     maze_display[finish.row*2+1][2*maze_cols] = Maze::DisplayCharacters::finish_room;
-    // } else {
-    //     maze_display[start.row*2+1][start.col*2+1] = Maze::DisplayCharacters::start_room;
-    //     maze_display[finish.row*2+1][finish.col*2+1] = Maze::DisplayCharacters::finish_room;
-    // }
 
 }
 
-// void Maze::drawMaze(){
-    
-//     std::vector<std::vector<std::string>> maze_display;
-//     generateMazeDisplay(maze_display);
-//     Maze::display_maze(maze_display);
-    
-// }
-
-// void Maze::display_maze(const std::vector<std::vector<std::string>>& maze_display){
-//     // Draw the maze to the console
-//     for(const std::vector<std::string>& row_display : maze_display) {
-//         for(const std::string& maze_element : row_display) {
-//             std::cout << maze_element;
-//         }
-//         std::cout << std::endl;
-//     }
-// }
 
 void Maze::pickStartAndFinish(){
     std::random_device rd; // obtain a random number from hardware
