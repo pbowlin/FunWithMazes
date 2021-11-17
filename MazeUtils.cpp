@@ -78,15 +78,13 @@ namespace mazeUtils {
     }
     
     void saveMazeAsImg(const Maze& maze, const std::vector<std::vector<std::string>>& maze_display, int scale, std::string filename_suffix){
-        std::string maze_type = maze.getType();
-        auto[num_rows, num_cols] = maze.getSize();
-        
-        std::string filename_base = "./MazeImages/" + maze_type + "_" + std::to_string(num_rows) + "x" + std::to_string(num_cols) + "_" + filename_suffix;
+        std::string filename_base = generateFilename(maze, filename_suffix);
         std::string filename_ppm = filename_base + ".ppm";
         std::string filename_png = filename_base + ".png";
         
         std::ofstream out(filename_ppm, std::ios::binary | std::ios::out | std::ios::trunc);
         
+        auto[num_rows, num_cols] = maze.getSize();
         num_rows = num_rows*2 + 1;
         num_cols = num_cols*2 + 1;
         
@@ -114,6 +112,8 @@ namespace mazeUtils {
                     elem_color = "255 0 255\n"; // Start room is purple
                 } else if(elem == Maze::DisplayCharacters::finish_room){
                     elem_color = "255 0 0\n"; // Finish room is red
+                } else if (elem == Maze::DisplayCharacters::current_cell){
+                    elem_color = "255 125 0\n"; // Current cell is orange
                 }
                 
                 out << elem_color;
@@ -139,10 +139,39 @@ namespace mazeUtils {
         return distr(gen);
     }
     
+    // Generates a file path based on the maze type and size. This does not add a file type extension.
+    std::string generateFilename(const Maze& maze, std::string filename_suffix){
+        std::string maze_type = maze.getType();
+        auto[num_rows, num_cols] = maze.getSize();
+        
+        return "./MazeImages/" + maze_type + "_" + std::to_string(num_rows) + "x" + std::to_string(num_cols)  + filename_suffix;
+    }
+    
 }
 
 namespace mazeAnimation {
-    void addAnimationFrame(const Maze& maze, const std::unordered_set<CellCoords>& touched, CellCoords current){
+    void addAnimationFrame(const Maze& maze, const MazeSolutionDisplayElements solution_elems, CellCoords current){
+        std::vector<std::vector<std::string>> maze_display;
+        maze.generateMazeDisplay(maze_display, &solution_elems); 
+        maze_display[current.row*2+1][current.col*2+1] = Maze::DisplayCharacters::current_cell;
+        // if(animationcount++ % 10 == 0) {
+        //     mazeUtils::saveMazeAsImg(maze, maze_display, 1, std::to_string(animationcount));
+        // }
+        
+        mazeUtils::saveMazeAsImg(maze, maze_display, 8, solver_type);
+        
+        std::string base_filename = mazeUtils::generateFilename(maze, solver_type);
+        std::string gif_filename = base_filename + ".gif";
+        std::string png_filename = base_filename + ".png";
+        
+        // Create an animation with Image Magick with the following command:
+        // convert -delay ##(in ms) -loop ##(0 for infinite loop) [images/gifs to add to animation seperated by spaces (wildcards allowed)] [destination gif filepath]
+        // Example: convert -delay 50 -loop 0 testDFS.gif PrimsMaze_30x30*.png testMaze.gif
+        std::string imageMagick_animate_command = "convert -delay " + std::to_string(animation_frame_delay_ms) + " -loop 1 " + gif_filename + " " + png_filename + " " + gif_filename;
+        system(imageMagick_animate_command.c_str());
+        
+        std::string remove_command = "rm " + png_filename;
+        system(remove_command.c_str());
         
     }
 }

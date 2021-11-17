@@ -80,7 +80,7 @@ std::string Maze::getType() const {
     return type;
 }
 
-void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display, MazeSolutionDisplayElements* solution_elems_ptr) const {
+void Maze::generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display, const MazeSolutionDisplayElements* const solution_elems_ptr) const {
     
     // Initialize maze to be entirely walls
     for(int i = 0; i < maze_rows * 2 + 1; ++i){

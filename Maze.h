@@ -24,7 +24,7 @@ class Maze {
     virtual ~Maze() = default;
   
     virtual void generateMaze() = 0;
-    virtual void generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display, MazeSolutionDisplayElements* solution_elems_ptr = nullptr) const;
+    virtual void generateMazeDisplay(std::vector<std::vector<std::string>>& maze_display, const MazeSolutionDisplayElements* const solution_elems_ptr = nullptr) const;
     
     void listCellsWithPassages() const;
     const std::vector<std::vector<MazeCell>>& getMaze() const;
@@ -44,6 +44,7 @@ class Maze {
       inline static std::string solution_touched = " \033[;36m*\033[0m ";
       inline static std::string start_room = " \033[1;31mS\033[0m ";
       inline static std::string finish_room = " \033[1;31mF\033[0m ";
+      inline static std::string current_cell = " C "; // For use when creating animations
     };
     
     //static void display_maze(const std::vector<std::vector<std::string>>& maze_display);

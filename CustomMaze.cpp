@@ -28,6 +28,9 @@ void CustomMaze::loadMazeFromPNG(std::string filepath) {
     
     convertMazeDisplayToMaze(maze_display);
     
+    std::string remove_command = "rm " + ppm_filepath;
+    system(remove_command.c_str());
+    
 }
 
 bool CustomMaze::convertImageToMazeDisplay(std::string ppm_filepath, std::vector<std::vector<std::string>>& maze_display){
@@ -101,6 +104,10 @@ bool CustomMaze::convertImageToMazeDisplay(std::string ppm_filepath, std::vector
                     // will always be a wall or a room, respectively. These are already dealt with above.
                     row.push_back(Maze::DisplayCharacters::vert_passage);
                 }
+            } else {
+                std::cout << "WARNING: Can't correlate pixel color values of (" << r << ", " << g << ", " << b << ") at pixel location (row: " << i << ", col: " << j << ") to a maze display character. Using open room instead." << std::endl;
+                row.push_back(Maze::DisplayCharacters::room);
+                
             }
             
         }

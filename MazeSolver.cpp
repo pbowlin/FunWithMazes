@@ -12,6 +12,7 @@
 // This version of A Star will always add the cell to the open list if the path is less than the previous path. See comments in add passage block for details.
 std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver_ALWAYS_ADD(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
     std::cout << "Solving maze with A* algorithm" << std::endl;
+    mazeAnimation::solver_type = "_Astar_ALWAYSADD";
     const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
     const CellCoords start = maze_obj.getStart();
     const CellCoords finish = maze_obj.getFinish();
@@ -42,8 +43,9 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     open_cells.push(start);
     expansion_candidates.insert(start);
     
+    CellCoords current;
     while(!open_cells.empty()){
-        CellCoords current = open_cells.top();
+         current = open_cells.top();
         touched.insert(open_cells.top());
         
         if (current == finish){
@@ -70,17 +72,21 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
         }
         
         if(mazeAnimation::create_animation){
-            mazeAnimation::addAnimationFrame(maze_obj, touched, current);
+            mazeAnimation::addAnimationFrame(maze_obj, {solution, touched}, current);
         }
         
     }
     
+    if(mazeAnimation::create_animation){
+        mazeAnimation::addAnimationFrame(maze_obj, {solution, touched}, current);
+    }
     return {solution, touched };
 }
 
 // This version of A Star will only add the cell to the open list if the path is less than the previous path and the passage has not been added already. See comments in add passage block for details.
 std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver_ONLY_ADD_NEW(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
     std::cout << "Solving maze with A* algorithm" << std::endl;
+    mazeAnimation::solver_type = "_Astar_ONLYNEW";
     const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
     const CellCoords start = maze_obj.getStart();
     const CellCoords finish = maze_obj.getFinish();
@@ -111,8 +117,9 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     open_cells.push(start);
     expansion_candidates.insert(start);
     
+    CellCoords current;
     while(!open_cells.empty()){
-        CellCoords current = open_cells.top();
+        current = open_cells.top();
         touched.insert(open_cells.top());
         
         if (current == finish){
@@ -140,8 +147,15 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
             
         }
         
+        if(mazeAnimation::create_animation){
+            mazeAnimation::addAnimationFrame(maze_obj, {solution, touched}, current);
+        }
+        
     }
     
+    if(mazeAnimation::create_animation){
+        mazeAnimation::addAnimationFrame(maze_obj, {solution, touched}, current);
+    }
     return {solution, touched };
 }
 
@@ -149,6 +163,7 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
 // nodes -- for simple mazes like what I am generating... where the path is likely to be better if you are closer to the goal regardless of how you got there, since there is only 1 solution.)
 std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver_HEURISTIC_COST_ONLY(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
     std::cout << "Solving maze with A* algorithm" << std::endl;
+    mazeAnimation::solver_type = "_Astar_HEURISTIC";
     const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
     const CellCoords start = maze_obj.getStart();
     const CellCoords finish = maze_obj.getFinish();
@@ -182,8 +197,9 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     cheapest_path_from_start[start].cost = 0;
     estimated_cost_to_goal[start].cost = heuristic_func(start, finish);
     
+    CellCoords current;
     while(!open_cells.empty()){
-        CellCoords current = open_cells.top();
+        current = open_cells.top();
         touched.insert(open_cells.top());
         
         if (current == finish){
@@ -210,13 +226,21 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
             
         }
         
+        if(mazeAnimation::create_animation){
+            mazeAnimation::addAnimationFrame(maze_obj, {solution, touched}, current);
+        }
+        
     }
     
+    if(mazeAnimation::create_animation){
+        mazeAnimation::addAnimationFrame(maze_obj, {solution, touched}, current);
+    }
     return {solution, touched };
 }
 
 std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::TremauxSolver(const Maze& maze_obj){
     std::cout << "Solving maze with Tremaux's algorithm" << std::endl;
+    mazeAnimation::solver_type = "_Tremaux";
     const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
     const CellCoords start = maze_obj.getStart();
     const CellCoords finish = maze_obj.getFinish();
@@ -296,6 +320,11 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
                 }
             }
         }
+        
+        if(mazeAnimation::create_animation){
+            mazeAnimation::addAnimationFrame(maze_obj, {solution, touched}, current);
+        }
+        
         // Advance to the next cell
         prev = current;
         current = (*passages)[next_passage_idx];
@@ -333,6 +362,11 @@ std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::
     }
     
     std::reverse(solution.begin(), solution.end());
+    
+    if(mazeAnimation::create_animation){
+        mazeAnimation::addAnimationFrame(maze_obj, {solution, touched}, current);
+    }
+    
     return {solution, touched};
 }
 
