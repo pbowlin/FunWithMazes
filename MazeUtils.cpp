@@ -5,7 +5,6 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <random>
 
 namespace mazeBenchmarking {
@@ -140,84 +139,4 @@ namespace mazeUtils {
         return distr(gen);
     }
     
-    
-    void loadMazeFromPNG(std::string filepath) {
-        // First convert the image to the workable .ppm ascii format.
-        std::string ppm_filepath = filepath.substr(0, filepath.find(".png")) + ".ppm";
-        std::string imageMagick_convert_command = "convert " + filepath + " -compress none " + ppm_filepath;
-        std::cout << "ppm filepath: " << ppm_filepath << std::endl;
-        std::cout << "Conversion command: " << imageMagick_convert_command << std::endl;
-        system(imageMagick_convert_command.c_str());
-        
-        std::ifstream file(ppm_filepath);
-        std:: string str;
-        int rows, cols;
-        int i = 0;
-        while(std::getline(file, str)){
-            if(i == 1){
-                std::stringstream stream(str);
-                stream >> rows >> cols;
-                break;
-            }
-            ++i;
-        }
-        std::cout << rows << ", " << cols << std::endl;
-        std::vector<std::vector<std::string>> maze_display;
-        std::getline(file, str); // Advance the line in the file past the max val line, to the start of pixel values
-        for(int i = 0; i < rows; ++i){
-            std::vector<std::string> row;
-            std::getline(file, str);
-            std::stringstream stream(str);
-            std::cout << str << std::endl;
-            for( int j = 0; j < cols; ++j){
-                
-                int r,g,b;
-                stream >> r >> g >> b;
-                std::cout << "(" << r << ", " << g << ", " << b << "),";
-                
-                if(r == 0 && g == 0 && b == 0) {
-                    // Black pixel is a wall
-                    row.push_back(Maze::DisplayCharacters::wall);
-                    std::cout << "Wall\t";
-                } else if (r == 255 && g == 0 && b == 0){
-                    // Red pixel is the finish
-                    row.push_back(Maze::DisplayCharacters::finish_room);
-                    std::cout << "Finish\t";
-                } else if(r == 255 && g == 0 && b == 255){
-                    // Purple pixel is the start
-                    row.push_back(Maze::DisplayCharacters::start_room);
-                    std::cout << "Start\t";
-                } else if(r == 255 && g == 255 && b == 255){
-                    // Pixel is white so it could be a room or a passage
-                    if(i % 2 == 1 && j % 2 == 1){
-                        // row and column are both odd, so its a room
-                        row.push_back(Maze::DisplayCharacters::room);
-                        std::cout << "Room\t";
-                    } else if (i % 2 == 1 && j % 2 == 0){
-                        // row is odd and column is even, so its a horizontal passage
-                        row.push_back(Maze::DisplayCharacters::horiz_passage);
-                        std::cout << "HPass\t";
-                    } else {
-                        // row is even and column is odd, so its a vertical passage
-                        // Note that we don't care about when row and col are both even because that
-                        // will always be a wall, so it is taken care of in the black pixel section
-                        row.push_back(Maze::DisplayCharacters::vert_passage);
-                        std::cout << "VPass\t";
-                    }
-                }
-                
-            }
-            std::cout << std::endl;
-            maze_display.push_back(row);
-            
-        }
-        
-        // while(std::getline(file, str)){
-        //     std::cout << str << std::endl;
-            
-        // }
-        std::cout << "Done reading file, printing maze:" << std::endl;
-        drawMazeToConsole(maze_display);
-        
-    }
 }

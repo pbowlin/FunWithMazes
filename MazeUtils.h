@@ -14,5 +14,4 @@ namespace mazeUtils {
     void saveMazeAsTxt(const std::vector<std::vector<std::string>>& maze_display);
     void saveMazeAsImg(const Maze& maze, const std::vector<std::vector<std::string>>& maze_display, int scale, std::string filename_suffix);
     int randomlySelectNextIndex(int num_options);
-    void loadMazeFromPNG(std::string filepath);
 }

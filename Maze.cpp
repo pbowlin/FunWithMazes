@@ -3,7 +3,6 @@
 #include <iostream>
 #include <random>
 #include <cmath>
-//#include <fstream>
 
 Maze::Maze(int rows, int cols) : 
     maze_rows(rows),
