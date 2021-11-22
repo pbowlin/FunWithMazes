@@ -4,22 +4,28 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
+#include <tuple>
 
-CustomMaze::CustomMaze(std::string maze_filepath_in):
+CustomMaze::CustomMaze(std::string maze_filepath_in, bool user_drawn):
     Maze(0,0),
-    maze_filepath(maze_filepath_in)
+    maze_filepath(maze_filepath_in),
+    user_drawn_maze(user_drawn)
     {
         type = "CustomMaze";
     }
     
 void CustomMaze::generateMaze(){
-    loadMazeFromPNG(maze_filepath);
+    if(user_drawn_maze)
+        loadUserDrawnMaze();
+    else
+        loadMazeFromPNG();
 }
 
-void CustomMaze::loadMazeFromPNG(std::string filepath) {
+void CustomMaze::loadMazeFromPNG() {
     // First convert the image to the workable .ppm ascii format.
-    std::string ppm_filepath = filepath.substr(0, filepath.find(".png")) + ".ppm";
-    std::string imageMagick_convert_command = "convert " + filepath + " -compress none " + ppm_filepath;
+    std::string ppm_filepath = maze_filepath.substr(0, maze_filepath.find(".png")) + ".ppm";
+    std::string imageMagick_convert_command = "convert " + maze_filepath + " -compress none " + ppm_filepath;
     system(imageMagick_convert_command.c_str());
     
     std::vector<std::vector<std::string>> maze_display;
@@ -159,6 +165,99 @@ void CustomMaze::convertMazeDisplayToMaze(std::vector<std::vector<std::string>>&
     }
     
 }
+
+void CustomMaze::loadUserDrawnMaze(){
+    std::cout << "Loading a user drawn image" << std::endl;
+    // First convert the image to the workable .ppm ascii format.
+    std::string ppm_filepath = maze_filepath.substr(0, maze_filepath.find(".png")) + ".ppm";
+    std::string imageMagick_convert_command = "convert " + maze_filepath + " -compress none " + ppm_filepath;
+    system(imageMagick_convert_command.c_str());
+    
+    // Pre-process the ppm file
+    std::vector<std::vector<std::tuple<int, int, int>>> maze_pixels;
+    
+    // Open the NetBPM image and read in the maze size
+    std::ifstream file(ppm_filepath);
+    if((file.rdstate() & std::ifstream::failbit ) != 0){
+        std::cout << "ERROR: Converted NetBPM file could not be opened. Check png filename. If the image filename is correct then an error occured during the ImageMagick conversion." << std::endl;
+        return;
+    }
+    
+    std:: string str;
+    int rows, cols;
+    int i = 0;
+    while(std::getline(file, str)){
+        if(i == 1){
+            std::stringstream stream(str);
+            stream >> rows >> cols;
+            break;
+        }
+        ++i;
+    }
+    
+    std::getline(file, str); // Advance the line in the file past the max val line, to the start of pixel values
+    
+    // Read in the maze pixel values
+    for(int i = 0; i < rows; ++i){
+        std::vector<std::tuple<int, int, int>> row;
+        std::getline(file, str);
+        std::stringstream stream(str);
+        for(int j = 0; j < cols; ++j){
+            int r,g,b;
+            stream >> r >> g >> b;
+            row.push_back({r,g,b});
+        }
+        maze_pixels.push_back(row);
+    }
+    
+    // Initialize the maze
+    Maze::initializeCells(rows, cols);
+    Maze::maze_rows = rows;
+    Maze::maze_cols = cols;
+    
+    // Fill in the maze passages based on the pixel values from the image
+    for(int i = 0; i < rows; ++i){
+        for(int j = 0; j < cols; ++j){
+            auto[r,g,b] = maze_pixels[i][j];
+            
+            if(!(r == 0 && g == 0 & b == 0)){
+                // Any non-black pixel is a room and we need to check for passages. Black pixels can be ignored because they are walls and will always have 0 passages.
+                MazeCell* current = &(Maze::maze[i][j]);
+                if(i != rows - 1){
+                    auto[down_r, down_g, down_b] = maze_pixels[i+1][j]; // check the cell below the current cell for a passage
+                    if(!(down_r == 0 && down_g == 0 & down_b == 0)){
+                        MazeCell* neighbor = &(Maze::maze[i+1][j]);
+                        
+                        current->addPassage(neighbor->getCellCoords());
+                        neighbor->addPassage(current->getCellCoords());
+                    }
+                }
+                if(j != cols - 1){
+                    auto[right_r, right_g, right_b] = maze_pixels[i][j+1]; // check the cell to the right of the current cell for a passage
+                    if(!(right_r == 0 && right_g == 0 & right_b == 0)){
+                        MazeCell* neighbor = &(Maze::maze[i][j+1]);
+                        
+                        current->addPassage(neighbor->getCellCoords());
+                        neighbor->addPassage(current->getCellCoords());
+                    }
+                }
+                
+            }
+            
+            // Check to see if this cell is a start or finish cell
+            if(r == 255 && g == 0 && b == 0) {
+                // Red cell is the finish cell
+                setFinish({i,j});
+            } else if (r == 255 && g == 0 && b == 255){
+                // Purple cell is the start cell
+                setStart({i,j});
+            }
+        }
+    }
+    std::cout << "Done loading a user drawn image" << std::endl;
+    
+}
+
 
 void CustomMaze::setStart(CellCoords new_start){
     start = new_start;
