@@ -151,27 +151,58 @@ namespace mazeUtils {
 
 namespace mazeAnimation {
     void addAnimationFrame(const Maze& maze, const MazeSolutionDisplayElements solution_elems, CellCoords current){
+        static int animation_frame_count = 1;
+        if (animation_frame_count == 1)
+            std::cout << "\tAnimating the solution while the maze is solved. This may take a while for medium/larger mazes..." << std::endl;
+
         std::vector<std::vector<std::string>> maze_display;
-        maze.generateMazeDisplay(maze_display, &solution_elems); 
-        maze_display[current.row*2+1][current.col*2+1] = Maze::DisplayCharacters::current_cell;
-        // if(animationcount++ % 10 == 0) {
-        //     mazeUtils::saveMazeAsImg(maze, maze_display, 1, std::to_string(animationcount));
-        // }
-        
-        mazeUtils::saveMazeAsImg(maze, maze_display, 8, solver_type);
-        
-        std::string base_filename = mazeUtils::generateFilename(maze, solver_type);
-        std::string gif_filename = base_filename + ".gif";
-        std::string png_filename = base_filename + ".png";
-        
-        // Create an animation with Image Magick with the following command:
-        // convert -delay ##(in ms) -loop ##(0 for infinite loop) [images/gifs to add to animation seperated by spaces (wildcards allowed)] [destination gif filepath]
-        // Example: convert -delay 50 -loop 0 testDFS.gif PrimsMaze_30x30*.png testMaze.gif
-        std::string imageMagick_animate_command = "convert -delay " + std::to_string(animation_frame_delay_ms) + " -loop 1 " + gif_filename + " " + png_filename + " " + gif_filename;
-        system(imageMagick_animate_command.c_str());
-        
-        std::string remove_command = "rm " + png_filename;
-        system(remove_command.c_str());
-        
+        maze.generateMazeDisplay(maze_display, &solution_elems);
+        maze_display[current.row * 2 + 1][current.col * 2 + 1] = Maze::DisplayCharacters::current_cell;
+
+        // When ImageMagick makes gifs apparently it sorts on the filename of each image and that is the order in which the images are added to the gif, so 
+        // here we just pad the image number with zeros to ensure the images are added in the correct order (image 1 is appended with "000001" instead of just "1",
+        // and will come before 10, which is 000010)
+        int n_zero = 6;
+        std::string anim_count_str = std::to_string(animation_frame_count);
+        anim_count_str = std::string(n_zero - std::min(n_zero, (int)anim_count_str.length()), '0') + anim_count_str;
+
+        std::string suffix = solver_type + anim_count_str;
+        mazeUtils::saveMazeAsImg(maze, maze_display, 4, suffix);
+
+        if (animation_frame_count % 100 == 0 || solution_elems.solution.size() != 0) {
+            std::string base_filename = mazeUtils::generateFilename(maze, solver_type);
+            std::string miff_filename = base_filename + anim_count_str + ".miff"; // Intermediate filetype for image magick while building the gif
+            std::string png_filename = base_filename + "*.png";
+
+            // Create an animation with Image Magick with the following command:
+            // convert -delay ##(in ms) -loop ##(0 for infinite loop) [images/gifs to add to animation seperated by spaces (wildcards allowed)] [destination filepath]
+            // Example: convert -delay 50 -loop 0 testDFS.gif PrimsMaze_30x30*.png testMaze.gif
+            std::string imageMagick_animate_command = "convert -delay " + std::to_string(animation_frame_delay) + " -loop 1 " + png_filename + " " + miff_filename;
+            system(imageMagick_animate_command.c_str());
+
+            std::string remove_command = "rm " + png_filename;
+            system(remove_command.c_str());
+
+            std::cout << "\t" << animation_frame_count << " frames animated." << std::endl;
+        }
+
+        if (solution_elems.solution.size() != 0) {
+            std::cout << "\tFinalizing maze animation..." << std::endl;
+            std::string base_filename = mazeUtils::generateFilename(maze, solver_type);
+            std::string miff_filename = base_filename + "*.miff"; // All our images have been saved in .miff files, so we use these files to build the final gif
+            std::string gif_filename = base_filename + ".gif";
+
+            std::string imageMagick_final_animate = "convert -delay " + std::to_string(animation_frame_delay) + " -loop 1 " + miff_filename + " " + gif_filename;
+            system(imageMagick_final_animate.c_str());
+
+            std::string remove_command = "rm " + miff_filename;
+            system(remove_command.c_str());
+
+            std::cout << "\tDone animating maze." << std::endl;
+            animation_frame_count = 0;
+        } else {
+            ++animation_frame_count;
+        }
+
     }
 }

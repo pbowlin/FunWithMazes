@@ -11,7 +11,7 @@
 
 std::string mazeAnimation::solver_type = "";
 bool mazeAnimation::create_animation = false;
-int mazeAnimation::animation_frame_delay_ms = 15;
+int mazeAnimation::animation_frame_delay = 5; // Delay is in 1/100ths of a second
 
 int main(){
 
