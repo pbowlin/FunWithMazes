@@ -254,6 +254,9 @@ void CustomMaze::loadUserDrawnMaze(){
             }
         }
     }
+    
+    std::string remove_command = "rm " + ppm_filepath;
+    system(remove_command.c_str());
     std::cout << "Done loading a user drawn image" << std::endl;
     
 }
