@@ -7,16 +7,16 @@
 #include <vector>
 #include <tuple>
 
-CustomMaze::CustomMaze(std::string maze_filepath_in, bool user_drawn):
+CustomMaze::CustomMaze(std::string maze_filepath_in, bool freehand):
     Maze(0,0),
     maze_filepath(maze_filepath_in),
-    user_drawn_maze(user_drawn)
+    freehand_maze(freehand)
     {
         type = "CustomMaze";
     }
     
 void CustomMaze::generateMaze(){
-    if(user_drawn_maze)
+    if(freehand_maze)
         loadUserDrawnMaze();
     else
         loadMazeFromPNG();

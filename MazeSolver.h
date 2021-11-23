@@ -29,6 +29,7 @@ class MazeSolver {
         
         static std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> AStarSolver(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
         static std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> TremauxSolver(const Maze& maze_obj);
+        static void decideMazeSolver(const Maze& maze);
         
     private:
         MazeSolver(); // This class cannot be instantiated

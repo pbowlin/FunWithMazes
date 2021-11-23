@@ -9,7 +9,7 @@ Generic custom maze that was read in from an image
 
 class CustomMaze : public Maze {
     public:
-        CustomMaze(std::string maze_filepath_in, bool user_drawn);
+        CustomMaze(std::string maze_filepath_in, bool freehand);
         void generateMaze() override;
         
 
@@ -24,7 +24,7 @@ class CustomMaze : public Maze {
         void setFinish(CellCoords new_finish);
     
         std::string maze_filepath;
-        bool user_drawn_maze;
+        bool freehand_maze;
         
         
 };

@@ -1,5 +1,6 @@
 #include "MazeSolver.h"
 #include "MazeUtils.h"
+#include "Timer.h"
 
 #include <iostream>
 #include <queue>
@@ -234,4 +235,50 @@ std::vector<CellCoords> MazeSolver::reconstruct_path(const std::unordered_map<Ce
     
     std::reverse(path.begin(), path.end());
     return path;
+}
+
+void MazeSolver::decideMazeSolver(const Maze& maze){
+    std::vector<int> solver_selections;
+    std::vector<int> heuristic_selections;
+    
+    int user_input = 1;
+    
+    while(user_input){
+    
+        std::cout << "Please select your maze solvers (You may choose multiple solvers by entering selections one by one.): " << std::endl;
+        std::cout << "\t(0) - Done selecting solvers\n\t(1) - A* Solver\n\t\tHas knowledge of the overall maze. Uses its best guess at steps to the finish to select where to search for the solution.\n\t(2) - Tremaux's Solver\n\t\tHas no knowledge of the maze. Marks passages to track where its been. A Human could do this in a maze!" << std::endl;
+         
+        std::cin >> user_input;
+        solver_selections.push_back(user_input);
+         
+        if(user_input == 1){
+            std::cout << "Please select a heuristic to use with this solver: " << std::endl;
+            std::cout << "\t(1) - Manhattan Distance to finish\n\t(2) - Euclidean \"Straight Line\" Distance to finish" << std::endl;
+            std::cin >> user_input;
+            heuristic_selections.push_back(user_input);
+        }
+    }
+    
+    int heuristic_index = 0;
+    for(int solver : solver_selections){
+        Timer solve_timer("Maze solver");
+        if(solver == 1){
+            switch(heuristic_selections[heuristic_index++]){
+                case 1: 
+                    {
+                        auto[solution_Astart, solution_display_Astart] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::manhattan_distance);
+                        break;
+                    }
+                case 2:
+                    {
+                        auto[solution_Astart, solution_display_Astart] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::euclidean_distance);
+                        break;
+                    }
+            }
+            
+        } else if (solver == 2){
+            auto[solution_trem, solution_display_trem] = MazeSolver::solveMaze(maze, &MazeSolver::TremauxSolver);
+        }
+    }
+     
 }
