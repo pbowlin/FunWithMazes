@@ -241,6 +241,25 @@ void CustomMaze::loadUserDrawnMaze(){
                         neighbor->addPassage(current->getCellCoords());
                     }
                 }
+                // // Allow for diagonal connections as well in user drawn mazes.
+                // if(i != rows - 1 && j != cols - 1){
+                //     auto[downright_r, downright_g, downright_b] = maze_pixels[i+1][j+1]; // check the cell to the right of the current cell for a passage
+                //     if(!(downright_r == 0 && downright_g == 0 & downright_b == 0)){
+                //         MazeCell* neighbor = &(Maze::maze[i+1][j+1]);
+                        
+                //         current->addPassage(neighbor->getCellCoords());
+                //         neighbor->addPassage(current->getCellCoords());
+                //     }
+                // }
+                // if(i != rows - 1 && j != 0){
+                //     auto[downleft_r, downleft_g, downleft_b] = maze_pixels[i+1][j-1]; // check the cell to the right of the current cell for a passage
+                //     if(!(downleft_r == 0 && downleft_g == 0 & downleft_b == 0)){
+                //         MazeCell* neighbor = &(Maze::maze[i+1][j-1]);
+                        
+                //         current->addPassage(neighbor->getCellCoords());
+                //         neighbor->addPassage(current->getCellCoords());
+                //     }
+                // }
                 
             }
             

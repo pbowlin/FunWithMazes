@@ -22,18 +22,13 @@ class MazeSolver {
     
             std::vector<std::vector<std::string>> solution_display;
             MazeSolutionDisplayElements solution_elems = {solution, touched};
-            MazeSolutionDisplayElements* solution_elems_ptr = &solution_elems;
-            maze.generateMazeDisplay(solution_display, solution_elems_ptr);
+            maze.generateMazeDisplay(solution_display, &solution_elems);
             
             return {solution, solution_display};
         }
         
-        static std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> AStarSolver_ALWAYS_ADD(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
-        static std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> AStarSolver_ONLY_ADD_NEW(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
-        static std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> AStarSolver_HEURISTIC_COST_ONLY(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
+        static std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> AStarSolver(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func);
         static std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> TremauxSolver(const Maze& maze_obj);
-        //static std::vector<std::vector<std::string>> generateSolutionDisplay(const Maze& maze, const std::vector<CellCoords>& solution, const std::unordered_set<CellCoords>& touched);
-        
         
     private:
         MazeSolver(); // This class cannot be instantiated

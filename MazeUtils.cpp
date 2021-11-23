@@ -144,7 +144,7 @@ namespace mazeUtils {
         std::string maze_type = maze.getType();
         auto[num_rows, num_cols] = maze.getSize();
         
-        return "./MazeImages/" + maze_type + "_" + std::to_string(num_rows) + "x" + std::to_string(num_cols)  + filename_suffix;
+        return "./MazeImages/Generated/" + maze_type + "_" + std::to_string(num_rows) + "x" + std::to_string(num_cols)  + filename_suffix;
     }
     
 }
