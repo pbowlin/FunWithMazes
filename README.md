@@ -10,15 +10,6 @@ As of now there are 4 maze generation algorithms and 2 maze solving algorithms.
     
 Each of the above algorithms generates a simple maze, meaning that from any point in the maze there is exactly 1 path to any other point in the maze.
 As such, there are no loops, there is only 1 solution to the maze, and obviously that solution is also the shortest path through the maze.
-    
-## Maze Solving:
-- A* Search - Has an "omniscient" view of the maze (it knows where the start and finish are and uses that knowledge to direct its solution search).
-    - As of now, you can set the heuristic used by A* to be either manhattan or euclidean distance to the finish. 
-    - A* will find the shortest path through the maze (given some assumptions about the heuristic used) even if it is not a simple maze
-        
-- Tremaux's Algorithm - Has no knowledge of the maze it is searching
-    - It is a blind algorithm that, unlike other more naive blind solving implementaions like wall following, will successfully find the exit even if there are loops in the maze. 
-    - It is not guaranteed to find the shortest path through the maze. 
 
 ### Custom Maze Generation
 If you'd like you can read in mazes from image files for use with the program. There are two types of mazes you can read in:
@@ -34,6 +25,15 @@ If you'd like you can read in mazes from image files for use with the program. T
     - All odd row/col combinations are rooms, and all rooms are white pixels
     - All even row/col combinations are walls, and are black pixels
     - Pixels at odd/even row/col combinations are either passages or walls between rooms, represented by white or black pixels respectively
+
+## Maze Solving:
+- A* Search - Has an "omniscient" view of the maze (it knows where the start and finish are and uses that knowledge to direct its solution search).
+    - As of now, you can set the heuristic used by A* to be either manhattan or euclidean distance to the finish. 
+    - A* will find the shortest path through the maze (given some assumptions about the heuristic used) even if it is not a simple maze
+        
+- Tremaux's Algorithm - Has no knowledge of the maze it is searching
+    - It is a blind algorithm that, unlike other more naive blind solving implementaions like wall following, will successfully find the exit even if there are loops in the maze. 
+    - It is not guaranteed to find the shortest path through the maze. 
 
 ## Compiling/Running/Checking
 compile with:
