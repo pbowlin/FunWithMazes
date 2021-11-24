@@ -49,14 +49,14 @@ bool CustomMaze::convertImageToMazeDisplay(std::string ppm_filepath, std::vector
     
     std:: string str;
     int rows, cols;
-    int i = 0;
+    int k = 0;
     while(std::getline(file, str)){
-        if(i == 1){
+        if(k == 1){
             std::stringstream stream(str);
             stream >> cols >> rows;
             break;
         }
-        ++i;
+        ++k;
     }
     
     if(rows % 2 == 0 || cols % 2 == 0){
@@ -66,14 +66,14 @@ bool CustomMaze::convertImageToMazeDisplay(std::string ppm_filepath, std::vector
 
     std::getline(file, str); // Advance the line in the file past the max val line, to the start of pixel values
     
-    // Read in the maze
-    for(int i = 0; i < rows; ++i){
-        std::vector<std::string> row;
-        std::getline(file, str);
+    // Read in the maze pixel values
+    int i = 0; // Current row being read
+    int j = 0; // Current column being read
+    std::vector<std::string> row;
+    while(std::getline(file, str)){
         std::stringstream stream(str);
-        for(int j = 0; j < cols; ++j){
-            int r,g,b;
-            stream >> r >> g >> b;
+        int r,g,b;
+        while(stream >> r >> g >> b){
             
             if((i == 0 || i == rows - 1 || j == 0 || j == cols - 1) 
                 && (r != 0 || g != 0 || b != 0)){
@@ -116,9 +116,13 @@ bool CustomMaze::convertImageToMazeDisplay(std::string ppm_filepath, std::vector
                 
             }
             
+            if(++j == cols){
+                maze_display.push_back(row);
+                row.clear();
+                j = 0;
+                ++i;
+            }
         }
-        maze_display.push_back(row);
-        
     }
     
     return true;
@@ -194,20 +198,23 @@ void CustomMaze::loadUserDrawnMaze(){
         }
         ++i;
     }
-    
+
     std::getline(file, str); // Advance the line in the file past the max val line, to the start of pixel values
     
     // Read in the maze pixel values
-    for(int i = 0; i < rows; ++i){
-        std::vector<std::tuple<int, int, int>> row;
-        std::getline(file, str);
+    int cols_read = 0;
+    std::vector<std::tuple<int, int, int>> row;
+    while(std::getline(file, str)){
         std::stringstream stream(str);
-        for(int j = 0; j < cols; ++j){
-            int r,g,b;
-            stream >> r >> g >> b;
+        int r,g,b;
+        while(stream >> r >> g >> b){
             row.push_back({r,g,b});
+            if(++cols_read == cols){
+                maze_pixels.push_back(row);
+                row.clear();
+                cols_read = 0;
+            }
         }
-        maze_pixels.push_back(row);
     }
     
     // Initialize the maze
@@ -277,7 +284,6 @@ void CustomMaze::loadUserDrawnMaze(){
     std::string remove_command = "rm " + ppm_filepath;
     system(remove_command.c_str());
     std::cout << "Done loading a user drawn image" << std::endl;
-    
 }
 
 

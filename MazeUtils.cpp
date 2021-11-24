@@ -42,11 +42,7 @@ namespace mazeUtils {
     
     
     void drawMazeToConsole(const std::vector<std::vector<std::string>>& maze_display){
-    
-        // std::vector<std::vector<std::string>> maze_display;
-        // maze.generateMazeDisplay(maze_display);
-        //Maze::display_maze(maze_display);
-        
+
         // Draw the maze to the console
         for(const std::vector<std::string>& row_display : maze_display) {
             for(const std::string& maze_element : row_display) {
