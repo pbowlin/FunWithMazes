@@ -260,39 +260,45 @@ void MazeSolver::decideMazeSolver(const Maze& maze){
         }
     }
     
-    std::cout << "Would you like to animate the solution?" << std::endl;
-    std::cout << "\t(0) - No\n\t(1) - Yes" << std::endl;
-    std::cin >> mazeAnimation::create_animation;
-    
-    int heuristic_index = 0;
-    for(int solver : solver_selections){
-        std::cout << "\n============= Solving Maze =============" << std:: endl;
+    if(solver_selections.empty()){
+        std::vector<std::vector<std::string>> maze_display;
+        maze.generateMazeDisplay(maze_display);
+        mazeUtils::saveMazeAsImg(maze, maze_display, 1, mazeAnimation::solver_type);
+    } else {
+        std::cout << "Would you like to animate the solution?" << std::endl;
+        std::cout << "\t(0) - No\n\t(1) - Yes" << std::endl;
+        std::cin >> mazeAnimation::create_animation;
         
-        std::tuple<std::vector<CellCoords>, std::vector<std::vector<std::string>>> solver_results;
-        
-        Timer solve_timer("Maze solving and solution saving");
-        if(solver == 1){
-            switch(heuristic_selections[heuristic_index++]){
-                case 1: 
-                    {
-                        mazeAnimation::heuristic_type = "_MD";
-                        solver_results = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::manhattan_distance);
-                        break;
-                    }
-                case 2:
-                    {
-                        mazeAnimation::heuristic_type = "_ED";
-                        solver_results = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::euclidean_distance);
-                        break;
-                    }
+        int heuristic_index = 0;
+        for(int solver : solver_selections){
+            std::cout << "\n============= Solving Maze =============" << std:: endl;
+            
+            std::tuple<std::vector<CellCoords>, std::vector<std::vector<std::string>>> solver_results;
+            
+            Timer solve_timer("Maze solving and solution saving");
+            if(solver == 1){
+                switch(heuristic_selections[heuristic_index++]){
+                    case 1: 
+                        {
+                            mazeAnimation::heuristic_type = "_MD";
+                            solver_results = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::manhattan_distance);
+                            break;
+                        }
+                    case 2:
+                        {
+                            mazeAnimation::heuristic_type = "_ED";
+                            solver_results = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::euclidean_distance);
+                            break;
+                        }
+                }
+                
+            } else if (solver == 2){
+                solver_results = MazeSolver::solveMaze(maze, &MazeSolver::TremauxSolver);
             }
             
-        } else if (solver == 2){
-            solver_results = MazeSolver::solveMaze(maze, &MazeSolver::TremauxSolver);
+            std::vector<std::vector<std::string>>* solution_display = &(std::get<1>(solver_results));
+            mazeUtils::saveMazeAsImg(maze, *solution_display, 1, mazeAnimation::solver_type);
         }
-        
-        std::vector<std::vector<std::string>>* solution_display = &(std::get<1>(solver_results));
-        mazeUtils::saveMazeAsImg(maze, *solution_display, 1, mazeAnimation::solver_type);
     }
      
 }

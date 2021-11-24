@@ -28,7 +28,7 @@ If you'd like you can read in mazes from image files for use with the program. T
     - Pixels at odd/even row/col combinations are either passages or walls between rooms, represented by white or black pixels respectively
 
 ## Maze Solving:
-- A* Search - Has an "omniscient" view of the maze (it knows where the start and finish are and uses that knowledge to direct its solution search).
+- A* Search - Has an over-arching view of the maze (it knows where the start and finish are and uses that knowledge to direct its solution search).
     - As of now, you can set the heuristic used by A* to be either manhattan or euclidean distance to the finish. 
     - A* will find the shortest path through the maze (given some assumptions about the heuristic used) even if it is not a simple maze
         

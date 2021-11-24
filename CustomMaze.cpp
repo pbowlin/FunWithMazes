@@ -53,7 +53,7 @@ bool CustomMaze::convertImageToMazeDisplay(std::string ppm_filepath, std::vector
     while(std::getline(file, str)){
         if(i == 1){
             std::stringstream stream(str);
-            stream >> rows >> cols;
+            stream >> cols >> rows;
             break;
         }
         ++i;
@@ -189,7 +189,7 @@ void CustomMaze::loadUserDrawnMaze(){
     while(std::getline(file, str)){
         if(i == 1){
             std::stringstream stream(str);
-            stream >> rows >> cols;
+            stream >> cols >> rows;
             break;
         }
         ++i;
