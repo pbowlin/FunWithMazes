@@ -8,8 +8,9 @@ As of now there are 4 maze generation algorithms and 2 maze solving algorithms.
 - Wilson's Maze - Unbiased. Has a good mix of long and short paths.
 - Custom Maze - You can read in custom mazes from images. See custom maze section below.
     
-Each of the above algorithms generates a simple maze, meaning that from any point in the maze there is exactly 1 path to any other point in the maze.
+Each of the first 3 algorithms generates a simple maze, meaning that from any point in the maze there is exactly 1 path to any other point in the maze.
 As such, there are no loops, there is only 1 solution to the maze, and obviously that solution is also the shortest path through the maze.
+Custom mazes are not restricted to simple mazes.
 
 ### Custom Maze Generation
 If you'd like you can read in mazes from image files for use with the program. There are two types of mazes you can read in:
