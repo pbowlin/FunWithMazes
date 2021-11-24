@@ -9,6 +9,7 @@
 #include <string>
 
 std::string mazeAnimation::solver_type = "";
+std::string mazeAnimation::heuristic_type = "";
 bool mazeAnimation::create_animation = false;
 int mazeAnimation::animation_frame_delay = 5; // Delay is in 1/100ths of a second
 
@@ -16,14 +17,14 @@ int main(){
 
     {
 
-        std::cout << "================================\n";
-        std::cout << "======== Fun With Mazes ========\n";
-        std::cout << "================================\n";
+        std::cout << "======================================================\n";
+        std::cout << "=================== Fun With Mazes ===================\n";
+        std::cout << "======================================================\n";
 
         std::unique_ptr<Maze> maze = MazeFactory::createMaze();
         MazeSolver::decideMazeSolver(*maze);
 
-        mazeAnimation::create_animation = true;
+        //mazeAnimation::create_animation = true;
         
         // // Read in a custom maze from an image file and solve it.
         // {

@@ -17,7 +17,8 @@ std::unique_ptr<Maze> MazeFactory::createMaze() {
     // std::string maze_image_path = "./MazeImages/TestMazes/Freehand/TinySpiralMaze.png"; // true
     // std::string maze_image_path = "./MazeImages/TestMazes/Freehand/TinyMaze.png"; // true
 
-    std::cout << "\nWhat would you like to do?\n\t(0) - Generate a random maze\n\t(1) - Read in a maze from an image" << std::endl;
+    std::cout << "\n============= Maze Selection =============" << std::endl;
+    std::cout << "What would you like to do?\n\t(0) - Generate a random maze\n\t(1) - Read in a maze from an image" << std::endl;
     
     std::getline(std::cin, user_input);
     read_maze_from_image = std::stoi(user_input);
@@ -60,6 +61,7 @@ std::unique_ptr<Maze> MazeFactory::createMaze() {
         maze = std::make_unique<DFSMaze>(num_rows, num_cols);
     }
     
+    std::cout << "============= Generating Maze =============" << std:: endl;
     Timer maze_timer("Maze generation");
     maze->generateMaze();
     return maze;

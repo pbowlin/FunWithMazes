@@ -14,7 +14,7 @@
 
 std::tuple<std::vector<CellCoords>, std::unordered_set<CellCoords>> MazeSolver::AStarSolver(const Maze& maze_obj, std::function<int(const CellCoords&, const CellCoords&)>heuristic_func){
     std::cout << "Solving maze with A* algorithm" << std::endl;
-    mazeAnimation::solver_type = "_Astar";
+    mazeAnimation::solver_type = "_Astar" + mazeAnimation::heuristic_type;
     const std::vector<std::vector<MazeCell>>& maze = maze_obj.getMaze();
     const CellCoords start = maze_obj.getStart();
     const CellCoords finish = maze_obj.getFinish();
@@ -242,43 +242,57 @@ void MazeSolver::decideMazeSolver(const Maze& maze){
     std::vector<int> heuristic_selections;
     
     int user_input = 1;
-    
+    std::cout << "\n============= Solver Selection =============" << std:: endl;
     while(user_input){
     
         std::cout << "Please select your maze solvers (You may choose multiple solvers by entering selections one by one.): " << std::endl;
         std::cout << "\t(0) - Done selecting solvers\n\t(1) - A* Solver\n\t\tHas knowledge of the overall maze. Uses its best guess at steps to the finish to select where to search for the solution.\n\t(2) - Tremaux's Solver\n\t\tHas no knowledge of the maze. Marks passages to track where its been. A Human could do this in a maze!" << std::endl;
          
         std::cin >> user_input;
-        solver_selections.push_back(user_input);
+        if(user_input)
+            solver_selections.push_back(user_input);
          
         if(user_input == 1){
-            std::cout << "Please select a heuristic to use with this solver: " << std::endl;
-            std::cout << "\t(1) - Manhattan Distance to finish\n\t(2) - Euclidean \"Straight Line\" Distance to finish" << std::endl;
+            std::cout << "\tPlease select a heuristic to use with this solver: " << std::endl;
+            std::cout << "\t\t(1) - Manhattan Distance to finish\n\t\t(2) - Euclidean \"Straight Line\" Distance to finish" << std::endl;
             std::cin >> user_input;
             heuristic_selections.push_back(user_input);
         }
     }
     
+    std::cout << "Would you like to animate the solution?" << std::endl;
+    std::cout << "\t(0) - No\n\t(1) - Yes" << std::endl;
+    std::cin >> mazeAnimation::create_animation;
+    
     int heuristic_index = 0;
     for(int solver : solver_selections){
-        Timer solve_timer("Maze solver");
+        std::cout << "\n============= Solving Maze =============" << std:: endl;
+        
+        std::tuple<std::vector<CellCoords>, std::vector<std::vector<std::string>>> solver_results;
+        
+        Timer solve_timer("Maze solving and solution saving");
         if(solver == 1){
             switch(heuristic_selections[heuristic_index++]){
                 case 1: 
                     {
-                        auto[solution_Astart, solution_display_Astart] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::manhattan_distance);
+                        mazeAnimation::heuristic_type = "_MD";
+                        solver_results = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::manhattan_distance);
                         break;
                     }
                 case 2:
                     {
-                        auto[solution_Astart, solution_display_Astart] = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::euclidean_distance);
+                        mazeAnimation::heuristic_type = "_ED";
+                        solver_results = MazeSolver::solveMaze(maze, &MazeSolver::AStarSolver, &CellCoords::euclidean_distance);
                         break;
                     }
             }
             
         } else if (solver == 2){
-            auto[solution_trem, solution_display_trem] = MazeSolver::solveMaze(maze, &MazeSolver::TremauxSolver);
+            solver_results = MazeSolver::solveMaze(maze, &MazeSolver::TremauxSolver);
         }
+        
+        std::vector<std::vector<std::string>>* solution_display = &(std::get<1>(solver_results));
+        mazeUtils::saveMazeAsImg(maze, *solution_display, 1, mazeAnimation::solver_type);
     }
      
 }

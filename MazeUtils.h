@@ -20,6 +20,7 @@ namespace mazeUtils {
 
 namespace mazeAnimation {
     extern std::string solver_type;
+    extern std::string heuristic_type;
     extern bool create_animation;
     extern int animation_frame_delay; // Delay is in 1/100ths of a second.
     
