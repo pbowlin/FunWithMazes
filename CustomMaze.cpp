@@ -12,7 +12,22 @@ CustomMaze::CustomMaze(std::string maze_filepath_in, bool freehand):
     maze_filepath(maze_filepath_in),
     freehand_maze(freehand)
     {
-        type = "CustomMaze";
+    
+        if(maze_filepath_in.find("CustomMaze") == std::string::npos){
+            std::string delimiter = "/";
+            // Extract the image name from the filepath (We assume this is just all the text after the final "/" in the filepath)
+            size_t pos = 0;
+            std::string token;
+            while ((pos = maze_filepath_in.find(delimiter)) != std::string::npos) {
+                token = maze_filepath_in.substr(0, pos);
+                maze_filepath_in.erase(0, pos + delimiter.length());
+            }
+            std::cout << maze_filepath_in << std::endl;
+            maze_filepath_in = maze_filepath_in.substr(0, maze_filepath_in.find(".png"));
+            type = maze_filepath_in;
+        } else {
+            type = "CustomMaze";
+        }
     }
     
 void CustomMaze::generateMaze(){
